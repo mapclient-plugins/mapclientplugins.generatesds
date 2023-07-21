@@ -43,9 +43,11 @@ class generatesdsStep(WorkflowStepMountPoint):
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
         output_dir = self._config['outputDir'] if os.path.isabs(self._config['outputDir']) else os.path.join(self._location, self._config['outputDir'])
         output_dir = os.path.realpath(output_dir)
-        shutil.copytree('mapclientplugins/generatesdsstep/resources', output_dir)
+        shutil.copytree('mapclientplugins/generatesdsstep/resources', output_dir, dirs_exist_ok=True)
         for folder_name in FOLDER_LIST:
-            os.mkdir(os.path.join(output_dir, folder_name))
+            abs_folder = os.path.join(output_dir, folder_name)
+            if not os.path.isdir(abs_folder):
+                os.mkdir(abs_folder)
         self._doneExecution()
         QtWidgets.QApplication.restoreOverrideCursor()
 

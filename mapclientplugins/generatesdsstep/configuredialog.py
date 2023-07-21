@@ -1,5 +1,4 @@
 
-
 from PySide6 import QtWidgets
 from mapclientplugins.generatesdsstep.ui_configuredialog import Ui_ConfigureDialog
 import os.path
@@ -33,6 +32,7 @@ class ConfigureDialog(QtWidgets.QDialog):
 
     def _makeConnections(self):
         self._ui.lineEdit0.textChanged.connect(self.validate)
+        self._ui.lineEditDatasetName.textChanged.connect(self.validate)
         self._ui.lineEditDirectoryLocation.textChanged.connect(self.validate)
         self._ui.pushButtonDirectoryChooser.clicked.connect(self._directory_chooser_clicked)
 
@@ -65,11 +65,23 @@ class ConfigureDialog(QtWidgets.QDialog):
         result = QtWidgets.QMessageBox.Yes
         if not self.validate():
             result = QtWidgets.QMessageBox.warning(self, 'Invalid Configuration',
-                'This configuration is invalid.  Unpredictable behaviour may result if you choose \'Yes\', are you sure you want to save this configuration?)',
+                'This configuration is invalid.  Unpredictable behaviour may result if you choose \'Yes\', '
+                'are you sure you want to save this configuration?',
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+        elif self.dataset_exists():
+            result = QtWidgets.QMessageBox.warning(self, 'Dataset exists',
+                'The dataset folder already exists. Files in the folder may be overwritten if you choose \'Yes\', '
+                'are you sure you want to save this configuration?',
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
 
         if result == QtWidgets.QMessageBox.Yes:
             QtWidgets.QDialog.accept(self)
+
+    def dataset_exists(self):
+        config = self.getConfig()
+        output_dir = config['outputDir'] if os.path.isabs(config['outputDir']) else os.path.join(
+            self._workflow_location, config['outputDir'])
+        return os.path.isdir(output_dir)
 
     def validate(self):
         """
@@ -86,12 +98,17 @@ class ConfigureDialog(QtWidgets.QDialog):
         else:
             self._ui.lineEdit0.setStyleSheet(INVALID_STYLE_SHEET)
 
+        dataset_name_valid = len(self._ui.lineEditDatasetName.text())
+        self._ui.lineEditDatasetName.setStyleSheet(DEFAULT_STYLE_SHEET
+                                                   if dataset_name_valid else INVALID_STYLE_SHEET)
+
         dir_path = self._output_location()
         if self._workflow_location:
             dir_path = os.path.join(self._workflow_location, dir_path)
 
         directory_valid = os.path.isdir(dir_path) and len(self._ui.lineEditDirectoryLocation.text())
-        self._ui.lineEditDirectoryLocation.setStyleSheet(DEFAULT_STYLE_SHEET if directory_valid else INVALID_STYLE_SHEET)
+        self._ui.lineEditDirectoryLocation.setStyleSheet \
+            (DEFAULT_STYLE_SHEET if directory_valid else INVALID_STYLE_SHEET)
 
         return valid and directory_valid
 
@@ -102,7 +119,7 @@ class ConfigureDialog(QtWidgets.QDialog):
         identifier over the whole of the workflow.
         """
         self._previousIdentifier = self._ui.lineEdit0.text()
-        output_dir = os.path.join(self._output_location(),self._ui.lineEditDatasetName.text())
+        output_dir = os.path.join(self._output_location(), self._ui.lineEditDatasetName.text())
         config = {'identifier': self._ui.lineEdit0.text(), 'DatasetName': self._ui.lineEditDatasetName.text(),
                   'Directory': self._output_location(), 'outputDir': output_dir}
         return config
@@ -117,4 +134,3 @@ class ConfigureDialog(QtWidgets.QDialog):
         self._ui.lineEdit0.setText(config['identifier'])
         self._ui.lineEditDatasetName.setText(config['DatasetName'])
         self._ui.lineEditDirectoryLocation.setText(config['Directory'])
-
