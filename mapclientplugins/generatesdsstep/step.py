@@ -2,13 +2,15 @@
 """
 MAP Client Plugin Step
 """
+import os
 import json
+import shutil
 
-from PySide6 import QtGui
+from PySide6 import QtGui, QtWidgets, QtCore
 
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclientplugins.generatesdsstep.configuredialog import ConfigureDialog
-
+from mapclientplugins.generatesdsstep.definitions import FOLDER_LIST
 
 class generatesdsStep(WorkflowStepMountPoint):
     """
@@ -17,7 +19,7 @@ class generatesdsStep(WorkflowStepMountPoint):
     """
 
     def __init__(self, location):
-        super(generatesdsStep, self).__init__('generatesds', location)
+        super(generatesdsStep, self).__init__('GenerateSDS', location)
         self._configured = False  # A step cannot be executed until it has been configured.
         self._category = 'Source'
         # Add any other initialisation code here:
@@ -29,9 +31,7 @@ class generatesdsStep(WorkflowStepMountPoint):
         # Port data:
         self._portData0 = None  # http://physiomeproject.org/workflow/1.0/rdf-schema#directory_location
         # Config:
-        self._config = {
-            'identifier': '',
-        }
+        self._config = {'identifier': '', 'DatasetName': '', 'Directory': '', 'outputDir': ''}
 
     def execute(self):
         """
@@ -40,7 +40,14 @@ class generatesdsStep(WorkflowStepMountPoint):
         may be connected up to a button in a widget for example.
         """
         # Put your execute step code here before calling the '_doneExecution' method.
+        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+        output_dir = self._config['outputDir'] if os.path.isabs(self._config['outputDir']) else os.path.join(self._location, self._config['outputDir'])
+        output_dir = os.path.realpath(output_dir)
+        shutil.copytree('mapclientplugins/generatesdsstep/resources', output_dir)
+        for folder_name in FOLDER_LIST:
+            os.mkdir(os.path.join(output_dir, folder_name))
         self._doneExecution()
+        QtWidgets.QApplication.restoreOverrideCursor()
 
     def getPortData(self, index):
         """
@@ -50,7 +57,7 @@ class generatesdsStep(WorkflowStepMountPoint):
 
         :param index: Index of the port to return.
         """
-        return self._portData0  # http://physiomeproject.org/workflow/1.0/rdf-schema#directory_location
+        return os.path.realpath(os.path.join(self._location, self._config['Directory']))  # http://physiomeproject.org/workflow/1.0/rdf-schema#directory_location
 
     def configure(self):
         """
@@ -61,6 +68,7 @@ class generatesdsStep(WorkflowStepMountPoint):
             self._configured = True
         """
         dlg = ConfigureDialog(self._main_window)
+        dlg.setWorkflowLocation(self._location)
         dlg.identifierOccursCount = self._identifierOccursCount
         dlg.setConfig(self._config)
         dlg.validate()
@@ -101,6 +109,7 @@ class generatesdsStep(WorkflowStepMountPoint):
         self._config.update(json.loads(string))
 
         d = ConfigureDialog()
+        d.setWorkflowLocation(self._location)
         d.identifierOccursCount = self._identifierOccursCount
         d.setConfig(self._config)
         self._configured = d.validate()

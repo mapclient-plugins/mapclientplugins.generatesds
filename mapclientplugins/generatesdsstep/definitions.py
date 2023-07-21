@@ -1,0 +1,1 @@
+FOLDER_LIST = {"code", "derivative", "docs", "primary", "protocol", "source"}

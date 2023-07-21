@@ -16,8 +16,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractButton, QApplication, QDialog, QDialogButtonBox,
-    QFormLayout, QGridLayout, QGroupBox, QLabel,
-    QLineEdit, QSizePolicy, QWidget)
+    QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
+    QLabel, QLineEdit, QPushButton, QSizePolicy,
+    QWidget)
 
 class Ui_ConfigureDialog(object):
     def setupUi(self, ConfigureDialog):
@@ -39,6 +40,36 @@ class Ui_ConfigureDialog(object):
         self.lineEdit0.setObjectName(u"lineEdit0")
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.lineEdit0)
+
+        self.labelDatasetName = QLabel(self.configGroupBox)
+        self.labelDatasetName.setObjectName(u"labelDatasetName")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.labelDatasetName)
+
+        self.lineEditDatasetName = QLineEdit(self.configGroupBox)
+        self.lineEditDatasetName.setObjectName(u"lineEditDatasetName")
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.lineEditDatasetName)
+
+        self.labelOutputDirectory = QLabel(self.configGroupBox)
+        self.labelOutputDirectory.setObjectName(u"labelOutputDirectory")
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.labelOutputDirectory)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.lineEditDirectoryLocation = QLineEdit(self.configGroupBox)
+        self.lineEditDirectoryLocation.setObjectName(u"lineEditDirectoryLocation")
+
+        self.horizontalLayout.addWidget(self.lineEditDirectoryLocation)
+
+        self.pushButtonDirectoryChooser = QPushButton(self.configGroupBox)
+        self.pushButtonDirectoryChooser.setObjectName(u"pushButtonDirectoryChooser")
+
+        self.horizontalLayout.addWidget(self.pushButtonDirectoryChooser)
+
+
+        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout)
 
 
         self.gridLayout.addWidget(self.configGroupBox, 0, 0, 1, 1)
@@ -62,5 +93,8 @@ class Ui_ConfigureDialog(object):
         ConfigureDialog.setWindowTitle(QCoreApplication.translate("ConfigureDialog", u"Configure generatesds", None))
         self.configGroupBox.setTitle("")
         self.label0.setText(QCoreApplication.translate("ConfigureDialog", u"identifier:  ", None))
+        self.labelDatasetName.setText(QCoreApplication.translate("ConfigureDialog", u"Dataset Name:  ", None))
+        self.labelOutputDirectory.setText(QCoreApplication.translate("ConfigureDialog", u"Output directory:  ", None))
+        self.pushButtonDirectoryChooser.setText(QCoreApplication.translate("ConfigureDialog", u"...", None))
     # retranslateUi
 
