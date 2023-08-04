@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'configuredialog.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.5.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractButton, QApplication, QDialog, QDialogButtonBox,
-    QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
-    QLabel, QLineEdit, QPushButton, QSizePolicy,
-    QWidget)
+from PySide6.QtWidgets import (QAbstractButton, QApplication, QComboBox, QDialog,
+    QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox,
+    QHBoxLayout, QLabel, QLineEdit, QPushButton,
+    QSizePolicy, QWidget)
 
 class Ui_ConfigureDialog(object):
     def setupUi(self, ConfigureDialog):
@@ -51,10 +51,22 @@ class Ui_ConfigureDialog(object):
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.lineEditDatasetName)
 
+        self.labelDatasetType = QLabel(self.configGroupBox)
+        self.labelDatasetType.setObjectName(u"labelDatasetType")
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.labelDatasetType)
+
+        self.comboBoxDatasetType = QComboBox(self.configGroupBox)
+        self.comboBoxDatasetType.addItem("")
+        self.comboBoxDatasetType.addItem("")
+        self.comboBoxDatasetType.setObjectName(u"comboBoxDatasetType")
+
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.comboBoxDatasetType)
+
         self.labelOutputDirectory = QLabel(self.configGroupBox)
         self.labelOutputDirectory.setObjectName(u"labelOutputDirectory")
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.labelOutputDirectory)
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.labelOutputDirectory)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -69,7 +81,7 @@ class Ui_ConfigureDialog(object):
         self.horizontalLayout.addWidget(self.pushButtonDirectoryChooser)
 
 
-        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout)
+        self.formLayout.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout)
 
 
         self.gridLayout.addWidget(self.configGroupBox, 0, 0, 1, 1)
@@ -94,6 +106,10 @@ class Ui_ConfigureDialog(object):
         self.configGroupBox.setTitle("")
         self.label0.setText(QCoreApplication.translate("ConfigureDialog", u"identifier:  ", None))
         self.labelDatasetName.setText(QCoreApplication.translate("ConfigureDialog", u"Dataset Name:  ", None))
+        self.labelDatasetType.setText(QCoreApplication.translate("ConfigureDialog", u"Dataset Type:  ", None))
+        self.comboBoxDatasetType.setItemText(0, QCoreApplication.translate("ConfigureDialog", u"Code", None))
+        self.comboBoxDatasetType.setItemText(1, QCoreApplication.translate("ConfigureDialog", u"Experiment", None))
+
         self.labelOutputDirectory.setText(QCoreApplication.translate("ConfigureDialog", u"Output directory:  ", None))
         self.pushButtonDirectoryChooser.setText(QCoreApplication.translate("ConfigureDialog", u"...", None))
     # retranslateUi

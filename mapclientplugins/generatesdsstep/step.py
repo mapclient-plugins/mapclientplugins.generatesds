@@ -1,4 +1,3 @@
-
 """
 MAP Client Plugin Step
 """
@@ -10,7 +9,31 @@ from PySide6 import QtGui, QtWidgets, QtCore
 
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclientplugins.generatesdsstep.configuredialog import ConfigureDialog
-from mapclientplugins.generatesdsstep.definitions import FOLDER_LIST
+from mapclientplugins.generatesdsstep.definitions import REQUIRED_FOLDER_LIST, CODE_FOLDER_LIST, EXPERIMENT_FOLDER_LIST
+
+import os
+
+
+def generate_folders(output_dir, folder_name_list):
+    """
+    Create folders in the specified output directory.
+
+    This function takes an output directory path and a list of folder names. It checks if each folder
+    from the provided list already exists in the output directory. If not, it creates the folder.
+
+    Parameters:
+        output_dir (str): The path of the output directory where the folders will be created.
+        folder_name_list (list): A list of strings containing the names of folders to be created.
+
+    Returns:
+        None: The function does not return anything explicitly, but it creates folders in the output directory.
+    """
+
+    for folder_name in folder_name_list:
+        abs_folder = os.path.join(output_dir, folder_name)
+        if not os.path.isdir(abs_folder):
+            os.mkdir(abs_folder)
+
 
 class generatesdsStep(WorkflowStepMountPoint):
     """
@@ -31,7 +54,7 @@ class generatesdsStep(WorkflowStepMountPoint):
         # Port data:
         self._portData0 = None  # http://physiomeproject.org/workflow/1.0/rdf-schema#directory_location
         # Config:
-        self._config = {'identifier': '', 'DatasetName': '', 'Directory': '', 'outputDir': ''}
+        self._config = {'identifier': '', 'DatasetName': '', 'DatasetType': '', 'Directory': '', 'outputDir': ''}
 
     def execute(self):
         """
@@ -41,13 +64,18 @@ class generatesdsStep(WorkflowStepMountPoint):
         """
         # Put your execute step code here before calling the '_doneExecution' method.
         QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
-        output_dir = self._config['outputDir'] if os.path.isabs(self._config['outputDir']) else os.path.join(self._location, self._config['outputDir'])
+        output_dir = self._config['outputDir'] if os.path.isabs(self._config['outputDir']) else os.path.join(
+            self._location, self._config['outputDir'])
         output_dir = os.path.realpath(output_dir)
-        shutil.copytree('mapclientplugins/generatesdsstep/resources', output_dir, dirs_exist_ok=True)
-        for folder_name in FOLDER_LIST:
-            abs_folder = os.path.join(output_dir, folder_name)
-            if not os.path.isdir(abs_folder):
-                os.mkdir(abs_folder)
+        shutil.copytree('mapclientplugins/generatesdsstep/resources/required', output_dir, dirs_exist_ok=True)
+        generate_folders(output_dir, REQUIRED_FOLDER_LIST)
+        if self._config['DatasetType'] == "Code":
+            shutil.copytree('mapclientplugins/generatesdsstep/resources/code', output_dir, dirs_exist_ok=True)
+            generate_folders(output_dir, CODE_FOLDER_LIST)
+        elif self._config['DatasetType'] == "Experiment":
+            shutil.copytree('mapclientplugins/generatesdsstep/resources/experiment', output_dir, dirs_exist_ok=True)
+            generate_folders(output_dir, EXPERIMENT_FOLDER_LIST)
+
         self._doneExecution()
         QtWidgets.QApplication.restoreOverrideCursor()
 
@@ -59,7 +87,8 @@ class generatesdsStep(WorkflowStepMountPoint):
 
         :param index: Index of the port to return.
         """
-        return os.path.realpath(os.path.join(self._location, self._config['Directory']))  # http://physiomeproject.org/workflow/1.0/rdf-schema#directory_location
+        return os.path.realpath(os.path.join(self._location, self._config[
+            'Directory']))  # http://physiomeproject.org/workflow/1.0/rdf-schema#directory_location
 
     def configure(self):
         """
@@ -115,5 +144,3 @@ class generatesdsStep(WorkflowStepMountPoint):
         d.identifierOccursCount = self._identifierOccursCount
         d.setConfig(self._config)
         self._configured = d.validate()
-
-
