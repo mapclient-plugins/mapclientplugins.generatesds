@@ -35,14 +35,14 @@ def generate_folders(output_dir, folder_name_list):
             os.mkdir(abs_folder)
 
 
-class generatesdsStep(WorkflowStepMountPoint):
+class GenerateSDSStep(WorkflowStepMountPoint):
     """
     Skeleton step which is intended to be a helpful starting point
     for new steps.
     """
 
     def __init__(self, location):
-        super(generatesdsStep, self).__init__('GenerateSDS', location)
+        super(GenerateSDSStep, self).__init__('GenerateSDS', location)
         self._configured = False  # A step cannot be executed until it has been configured.
         self._category = 'Source'
         # Add any other initialisation code here:
@@ -63,21 +63,25 @@ class generatesdsStep(WorkflowStepMountPoint):
         may be connected up to a button in a widget for example.
         """
         # Put your execute step code here before calling the '_doneExecution' method.
-        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
         output_dir = self._config['outputDir'] if os.path.isabs(self._config['outputDir']) else os.path.join(
             self._location, self._config['outputDir'])
         output_dir = os.path.realpath(output_dir)
-        shutil.copytree('mapclientplugins/generatesdsstep/resources/required', output_dir, dirs_exist_ok=True)
-        generate_folders(output_dir, REQUIRED_FOLDER_LIST)
-        if self._config['DatasetType'] == "Code":
-            shutil.copytree('mapclientplugins/generatesdsstep/resources/code', output_dir, dirs_exist_ok=True)
-            generate_folders(output_dir, CODE_FOLDER_LIST)
-        elif self._config['DatasetType'] == "Experiment":
-            shutil.copytree('mapclientplugins/generatesdsstep/resources/experiment', output_dir, dirs_exist_ok=True)
-            generate_folders(output_dir, EXPERIMENT_FOLDER_LIST)
+        try:
+            shutil.copytree('mapclientplugins/generatesdsstep/resources/required', output_dir, dirs_exist_ok=True)
+            generate_folders(output_dir, REQUIRED_FOLDER_LIST)
+            if self._config['DatasetType'] == "Code":
+                shutil.copytree('mapclientplugins/generatesdsstep/resources/code', output_dir, dirs_exist_ok=True)
+                generate_folders(output_dir, CODE_FOLDER_LIST)
+            elif self._config['DatasetType'] == "Experiment":
+                shutil.copytree('mapclientplugins/generatesdsstep/resources/experiment', output_dir, dirs_exist_ok=True)
+                generate_folders(output_dir, EXPERIMENT_FOLDER_LIST)
+        except FileExistsError:
+            pass
+        finally:
+            QtWidgets.QApplication.restoreOverrideCursor()
 
         self._doneExecution()
-        QtWidgets.QApplication.restoreOverrideCursor()
 
     def getPortData(self, index):
         """
