@@ -121,8 +121,9 @@ class ConfigureDialog(QtWidgets.QDialog):
         self._previousIdentifier = self._ui.lineEdit0.text()
         output_dir = os.path.join(self._output_location(), self._ui.lineEditDatasetName.text())
         config = {'identifier': self._ui.lineEdit0.text(), 'DatasetName': self._ui.lineEditDatasetName.text(),
-                  'DatasetType': self._ui.comboBoxDatasetType.currentText(), 'Directory': self._output_location(),
-                  'outputDir': output_dir}
+                  'DatasetType': self._ui.comboBoxDatasetType.currentText(),
+                  'DerivativeExists': self._ui.checkBoxDerivativeDataExists.isChecked(),
+                  'Directory': self._output_location(), 'outputDir': output_dir}
         return config
 
     def setConfig(self, config):
@@ -135,4 +136,5 @@ class ConfigureDialog(QtWidgets.QDialog):
         self._ui.lineEdit0.setText(config['identifier'])
         self._ui.lineEditDatasetName.setText(config['DatasetName'])
         self._ui.comboBoxDatasetType.setCurrentText(config['DatasetType'])
+        self._ui.checkBoxDerivativeDataExists.setChecked(config['DerivativeExists'])
         self._ui.lineEditDirectoryLocation.setText(config['Directory'])

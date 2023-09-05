@@ -9,7 +9,8 @@ from PySide6 import QtGui, QtWidgets, QtCore
 
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclientplugins.generatesdsstep.configuredialog import ConfigureDialog
-from mapclientplugins.generatesdsstep.definitions import REQUIRED_FOLDER_LIST, CODE_FOLDER_LIST, EXPERIMENT_FOLDER_LIST
+from mapclientplugins.generatesdsstep.definitions import REQUIRED_FOLDER_LIST, CODE_FOLDER_LIST, \
+    EXPERIMENT_FOLDER_LIST, DERIVATIVE_FOLDER
 
 import os
 
@@ -28,7 +29,8 @@ def generate_folders(output_dir, folder_name_list):
     Returns:
         None: The function does not return anything explicitly, but it creates folders in the output directory.
     """
-
+    if not os.path.isdir(output_dir):
+        os.mkdir(output_dir)
     for folder_name in folder_name_list:
         abs_folder = os.path.join(output_dir, folder_name)
         if not os.path.isdir(abs_folder):
@@ -54,7 +56,8 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         # Port data:
         self._portData0 = None  # http://physiomeproject.org/workflow/1.0/rdf-schema#directory_location
         # Config:
-        self._config = {'identifier': '', 'DatasetName': '', 'DatasetType': '', 'Directory': '', 'outputDir': ''}
+        self._config = {'identifier': '', 'DatasetName': '', 'DatasetType': '', 'Directory': '',
+                        'DerivativeExists': False, 'outputDir': ''}
 
     def execute(self):
         """
@@ -68,16 +71,21 @@ class GenerateSDSStep(WorkflowStepMountPoint):
             self._location, self._config['outputDir'])
         output_dir = os.path.realpath(output_dir)
         try:
-            shutil.copytree('mapclientplugins/generatesdsstep/resources/required', output_dir, dirs_exist_ok=True)
             generate_folders(output_dir, REQUIRED_FOLDER_LIST)
+            shutil.copytree('mapclientplugins/generatesdsstep/resources/required', output_dir, dirs_exist_ok=True)
             if self._config['DatasetType'] == "Code":
-                shutil.copytree('mapclientplugins/generatesdsstep/resources/code', output_dir, dirs_exist_ok=True)
                 generate_folders(output_dir, CODE_FOLDER_LIST)
+                shutil.copytree('mapclientplugins/generatesdsstep/resources/code', output_dir, dirs_exist_ok=True)
             elif self._config['DatasetType'] == "Experiment":
-                shutil.copytree('mapclientplugins/generatesdsstep/resources/experiment', output_dir, dirs_exist_ok=True)
                 generate_folders(output_dir, EXPERIMENT_FOLDER_LIST)
-        except FileExistsError:
-            pass
+                shutil.copytree('mapclientplugins/generatesdsstep/resources/experiment', output_dir, dirs_exist_ok=True)
+            if self._config['DerivativeExists']:
+                generate_folders(output_dir, DERIVATIVE_FOLDER)
+        except shutil.Error as exc:
+            errors = exc.args[0]
+            for error in errors:
+                src, dst, msg = error
+                QtWidgets.QMessageBox.critical(self._main_window, 'Permission denied', f"Cannot write to {dst}.")
         finally:
             QtWidgets.QApplication.restoreOverrideCursor()
 
