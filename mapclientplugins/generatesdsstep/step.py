@@ -7,12 +7,11 @@ import shutil
 
 from PySide6 import QtGui, QtWidgets, QtCore
 
-from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
+from mapclient.core.utils import copy_step_additional_config_files
+from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint, workflowStepFactory
 from mapclientplugins.generatesdsstep.configuredialog import ConfigureDialog
 from mapclientplugins.generatesdsstep.definitions import REQUIRED_FOLDER_LIST, CODE_FOLDER_LIST, \
     EXPERIMENT_FOLDER_LIST, DERIVATIVE_FOLDER
-
-import os
 
 
 def generate_folders(output_dir, folder_name_list):
@@ -51,10 +50,14 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         self._icon = QtGui.QImage(':/generatesdsstep/images/data-source.png')
         # Ports:
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
+                      'http://physiomeproject.org/workflow/1.0/rdf-schema#uses',
+                      'http://physiomeproject.org/workflow/1.0/rdf-schema#sds_protocol'))
+        self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#provides',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#directory_location'))
         # Port data:
         self._portData0 = None  # http://physiomeproject.org/workflow/1.0/rdf-schema#directory_location
+        self._portData1 = None  # http://physiomeproject.org/workflow/1.0/rdf-schema#sds_protocol
         # Config:
         self._config = {'identifier': '', 'DatasetName': '', 'DatasetType': '', 'Directory': '',
                         'DerivativeExists': False, 'outputDir': ''}
@@ -72,13 +75,14 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         output_dir = os.path.realpath(output_dir)
         try:
             generate_folders(output_dir, REQUIRED_FOLDER_LIST)
-            shutil.copytree('mapclientplugins/generatesdsstep/resources/required', output_dir, dirs_exist_ok=True)
+            here = os.path.dirname(__file__)
+            shutil.copytree(os.path.join(here, 'resources', 'required'), output_dir, dirs_exist_ok=True)
             if self._config['DatasetType'] == "Code":
                 generate_folders(output_dir, CODE_FOLDER_LIST)
-                shutil.copytree('mapclientplugins/generatesdsstep/resources/code', output_dir, dirs_exist_ok=True)
+                shutil.copytree(os.path.join(here, 'resources', 'code'), output_dir, dirs_exist_ok=True)
             elif self._config['DatasetType'] == "Experiment":
                 generate_folders(output_dir, EXPERIMENT_FOLDER_LIST)
-                shutil.copytree('mapclientplugins/generatesdsstep/resources/experiment', output_dir, dirs_exist_ok=True)
+                shutil.copytree(os.path.join(here, 'resources', 'experiment'), output_dir, dirs_exist_ok=True)
             if self._config['DerivativeExists']:
                 generate_folders(output_dir, DERIVATIVE_FOLDER)
         except shutil.Error as exc:
@@ -89,7 +93,64 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         finally:
             QtWidgets.QApplication.restoreOverrideCursor()
 
+        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
+        try:
+            if self._portData1:
+                if self._portData1['name'] == 'SimpleScaffold':
+                    model = self._main_window.model()
+                    wm = model.workflowManager()
+                    ws = wm.scene()
+                    required_steps = []
+                    for i in self._portData1['inputs']:
+                        if i['type'] == 'identifier_file':
+                            source_configuration_dir = os.path.dirname(i['value'])
+                            target_configuration_dir = os.path.join(output_dir, i['destination'])
+
+                            shutil.copy(i['value'], target_configuration_dir)
+
+                            step_identifier, configuration_ext = os.path.splitext(os.path.basename(i['value']))
+                            wf = wm.load_workflow_virtually(source_configuration_dir)
+                            step_name = ws.get_step_name_from_identifier(wf, step_identifier)
+                            required_steps.append((step_name, step_identifier))
+                            step = workflowStepFactory(step_name, target_configuration_dir)
+                            step.setIdentifier(step_identifier)
+                            step.setLocation(source_configuration_dir)
+
+                            copy_step_additional_config_files(step, source_configuration_dir, target_configuration_dir)
+                        elif i['type'] == 'directory':
+                            src = i['value']
+                            dst = os.path.join(output_dir, i['destination'])
+                            os.makedirs(dst, exist_ok=True)
+                            names = os.listdir(src)
+                            for name in names:
+                                src_name = os.path.join(src, name)
+                                dst_name = os.path.join(dst, name)
+                                if os.path.isfile(src_name):
+                                    shutil.copy2(src_name, dst_name)
+                        elif i['type'] == 'dict':
+                            with open(os.path.join(output_dir, i['destination']), 'w') as f:
+                                json.dump(i['value'], f)
+
+                    workflow_location = os.path.join(output_dir, 'primary')
+                    wf = wm.create_empty_workflow(workflow_location)
+                    ws.create_from(wf, required_steps, workflow_location)
+
+        except shutil.Error as exc:
+            self._show_critical_error()
+            raise exc
+        except OSError as exc:
+            self._show_critical_error()
+            raise exc
+        finally:
+            QtWidgets.QApplication.restoreOverrideCursor()
+
         self._doneExecution()
+
+    def _show_critical_error(self):
+        QtWidgets.QMessageBox.critical(self._main_window, 'SDS Protocol failed', f"Could not apply protocol: {self._portData1['name']}.")
+
+    def setPortData(self, index, dataIn):
+        self._portData1 = dataIn  # http://physiomeproject.org/workflow/1.0/rdf-schema#sds_protocol
 
     def getPortData(self, index):
         """
@@ -99,8 +160,8 @@ class GenerateSDSStep(WorkflowStepMountPoint):
 
         :param index: Index of the port to return.
         """
-        return os.path.realpath(os.path.join(self._location, self._config[
-            'Directory']))  # http://physiomeproject.org/workflow/1.0/rdf-schema#directory_location
+        # http://physiomeproject.org/workflow/1.0/rdf-schema#directory_location
+        return os.path.realpath(os.path.join(self._location, self._config['outputDir']))
 
     def configure(self):
         """
