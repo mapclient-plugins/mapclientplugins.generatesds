@@ -33,6 +33,7 @@ readme = readfile("README.rst", split=True)[3:]  # Skip title
 source_license = readfile("LICENSE")
 requires = ['PySide6']  # Minimal requirements listing. Insert additional dependencies here.
 
+package_resources = [os.path.join(dp, f) for dp, dn, filenames in os.walk(os.path.join(SETUP_DIR, 'mapclientplugins', 'generatesdsstep', 'resources')) for f in filenames]
 
 setup(
     name='mapclientplugins.generatesdsstep',
@@ -46,11 +47,14 @@ setup(
         "Programming Language :: Python",
     ],
     author='Kay Wang',
-    author_email='',
-    url='',
+    author_email='developers@mapclient.org',
+    url='https://github.com/mapclient-plugins/mapclientplugins.generatesdsstep',
     packages=find_packages(exclude=['ez_setup', ]),
     namespace_packages=['mapclientplugins'],
-    include_package_data=True,
+    # include_package_data=True,
+    package_data={
+        'mapclientplugins.generatesdsstep': package_resources,
+    },
     zip_safe=False,
     install_requires=requires,
 )
