@@ -59,6 +59,7 @@ class Ui_ConfigureDialog(object):
         self.comboBoxDatasetType = QComboBox(self.configGroupBox)
         self.comboBoxDatasetType.addItem("")
         self.comboBoxDatasetType.addItem("")
+        self.comboBoxDatasetType.addItem("")
         self.comboBoxDatasetType.setObjectName(u"comboBoxDatasetType")
 
         self.formLayout.setWidget(2, QFormLayout.FieldRole, self.comboBoxDatasetType)
@@ -119,6 +120,7 @@ class Ui_ConfigureDialog(object):
         self.labelDatasetType.setText(QCoreApplication.translate("ConfigureDialog", u"Dataset Type:  ", None))
         self.comboBoxDatasetType.setItemText(0, QCoreApplication.translate("ConfigureDialog", u"Code", None))
         self.comboBoxDatasetType.setItemText(1, QCoreApplication.translate("ConfigureDialog", u"Experiment", None))
+        self.comboBoxDatasetType.setItemText(2, QCoreApplication.translate("ConfigureDialog", u"Scaffold", None))
 
         self.labelDerivativeData.setText(QCoreApplication.translate("ConfigureDialog", u"Derivative data:  ", None))
         self.checkBoxDerivativeDataExists.setText(QCoreApplication.translate("ConfigureDialog", u"Exists", None))
