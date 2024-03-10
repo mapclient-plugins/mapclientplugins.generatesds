@@ -10,6 +10,7 @@ from PySide6 import QtGui, QtWidgets, QtCore
 from mapclient.core.utils import copy_step_additional_config_files
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint, workflowStepFactory
 from mapclientplugins.generatesdsstep.configuredialog import ConfigureDialog
+from mapclientplugins.generatesdsstep.generatesdswidget import GenerateSDSWidget
 from mapclientplugins.generatesdsstep.definitions import REQUIRED_FOLDER_LIST, CODE_FOLDER_LIST, \
     EXPERIMENT_FOLDER_LIST, DERIVATIVE_FOLDER
 
@@ -44,6 +45,7 @@ class GenerateSDSStep(WorkflowStepMountPoint):
 
     def __init__(self, location):
         super(GenerateSDSStep, self).__init__('GenerateSDS', location)
+        self._view = None
         self._configured = False  # A step cannot be executed until it has been configured.
         self._category = 'Source'
         # Add any other initialisation code here:
@@ -78,9 +80,11 @@ class GenerateSDSStep(WorkflowStepMountPoint):
             here = os.path.dirname(__file__)
             shutil.copytree(os.path.join(here, 'resources', 'required'), output_dir, dirs_exist_ok=True)
             if self._config['DatasetType'] == "Code":
+                shutil.copytree(os.path.join(here, 'resources', 'others'), output_dir, dirs_exist_ok=True)
                 generate_folders(output_dir, CODE_FOLDER_LIST)
                 shutil.copytree(os.path.join(here, 'resources', 'code'), output_dir, dirs_exist_ok=True)
             elif self._config['DatasetType'] == "Experiment":
+                shutil.copytree(os.path.join(here, 'resources', 'others'), output_dir, dirs_exist_ok=True)
                 generate_folders(output_dir, EXPERIMENT_FOLDER_LIST)
                 shutil.copytree(os.path.join(here, 'resources', 'experiment'), output_dir, dirs_exist_ok=True)
             if self._config['DerivativeExists']:
@@ -144,7 +148,9 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         finally:
             QtWidgets.QApplication.restoreOverrideCursor()
 
-        self._doneExecution()
+        self._view = GenerateSDSWidget(output_dir, self._config['DatasetType'])
+        self._view.registerDoneExecution(self._doneExecution)
+        self._setCurrentWidget(self._view)
 
     def _show_critical_error(self):
         QtWidgets.QMessageBox.critical(self._main_window, 'SDS Protocol failed', f"Could not apply protocol: {self._portData1['name']}.")

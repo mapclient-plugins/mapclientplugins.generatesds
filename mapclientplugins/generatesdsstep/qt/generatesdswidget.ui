@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GenerateSDSWidget</class>
+ <widget class="QWidget" name="GenerateSDSWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>714</width>
+    <height>584</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GenerateSDS Widget</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="datasetGroupBox">
+     <property name="title">
+      <string>Dataset description</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelDatasetTitle">
+        <property name="text">
+         <string>Title:  </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="lineEditDatasetTitle"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelDatasetSubtitle">
+        <property name="text">
+         <string>Subtitle:  </string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEditDatasetSubtitle"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="labelDatasetKeywords">
+        <property name="text">
+         <string>Keywords:  </string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="lineEditDatasetKeywords"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="labelDatasetFunding">
+        <property name="text">
+         <string>Funding:  </string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="lineEditDatasetFunding"/>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="labelDatasetAcknowledgments">
+        <property name="text">
+         <string>Acknowledgments:  </string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="lineEditDatasetAcknowledgments"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="submissionGroupBox">
+     <property name="title">
+      <string>Submission</string>
+     </property>
+     <layout class="QFormLayout" name="submissionFormLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelSPARCAwardNumber">
+        <property name="text">
+         <string>SPARC Award number:  </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="lineEditSPARCAwardNumber"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelMilestoneAchieved">
+        <property name="text">
+         <string>Milestone achieved:  </string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEditMilestoneAchieved"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="labelMilestoneCompletionDate">
+        <property name="text">
+         <string>Milestone completion date:  </string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDateEdit" name="dateEditMilestoneCompletionDate"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QGroupBox" name="manifestGroupBox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>Scaffold manifest</string>
+     </property>
+     <layout class="QFormLayout" name="manifestFormLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelSpecies">
+        <property name="text">
+         <string>Species:  </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="lineEditSpecies"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelOrgan">
+        <property name="text">
+         <string>Organ:  </string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEditOrgan"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QPushButton" name="pushButtonDone">
+     <property name="text">
+      <string>Done</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
