@@ -11,8 +11,7 @@ from mapclient.core.utils import copy_step_additional_config_files
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint, workflowStepFactory
 from mapclientplugins.generatesdsstep.configuredialog import ConfigureDialog
 from mapclientplugins.generatesdsstep.generatesdswidget import GenerateSDSWidget
-from mapclientplugins.generatesdsstep.definitions import REQUIRED_FOLDER_LIST, CODE_FOLDER_LIST, \
-    EXPERIMENT_FOLDER_LIST, DERIVATIVE_FOLDER
+from mapclientplugins.generatesdsstep.definitions import PROTOCOL_LAYOUT, DERIVATIVE_FOLDER
 
 
 def generate_folders(output_dir, folder_name_list):
@@ -76,17 +75,13 @@ class GenerateSDSStep(WorkflowStepMountPoint):
             self._location, self._config['outputDir'])
         output_dir = os.path.realpath(output_dir)
         try:
-            generate_folders(output_dir, REQUIRED_FOLDER_LIST)
+            layout = PROTOCOL_LAYOUT[self._config['DatasetType']]
+            generate_folders(output_dir, layout.dirs())
             here = os.path.dirname(__file__)
             shutil.copytree(os.path.join(here, 'resources', 'required'), output_dir, dirs_exist_ok=True)
-            if self._config['DatasetType'] == "Code":
-                shutil.copytree(os.path.join(here, 'resources', 'others'), output_dir, dirs_exist_ok=True)
-                generate_folders(output_dir, CODE_FOLDER_LIST)
-                shutil.copytree(os.path.join(here, 'resources', 'code'), output_dir, dirs_exist_ok=True)
-            elif self._config['DatasetType'] == "Experiment":
-                shutil.copytree(os.path.join(here, 'resources', 'others'), output_dir, dirs_exist_ok=True)
-                generate_folders(output_dir, EXPERIMENT_FOLDER_LIST)
-                shutil.copytree(os.path.join(here, 'resources', 'experiment'), output_dir, dirs_exist_ok=True)
+            # shutil.copytree(os.path.join(here, 'resources', 'others'), output_dir, dirs_exist_ok=True)
+            if layout.resource_dir():
+                shutil.copytree(os.path.join(here, 'resources', layout.resource_dir()), output_dir, dirs_exist_ok=True)
             if self._config['DerivativeExists']:
                 generate_folders(output_dir, DERIVATIVE_FOLDER)
         except shutil.Error as exc:
@@ -160,7 +155,6 @@ class GenerateSDSStep(WorkflowStepMountPoint):
 
     def getPortData(self, index):
         """
-        Add your code here that will return the appropriate objects for this step.
         The index is the index of the port in the port list.  If there is only one
         provides port for this step then the index can be ignored.
 
