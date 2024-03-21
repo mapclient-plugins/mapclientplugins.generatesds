@@ -15,17 +15,17 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QDateEdit, QFormLayout, QGridLayout,
-    QGroupBox, QLabel, QLineEdit, QPushButton,
-    QSizePolicy, QWidget)
+from PySide6.QtWidgets import (QApplication, QCalendarWidget, QFormLayout, QGroupBox,
+    QHBoxLayout, QLabel, QLineEdit, QPushButton,
+    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 
 class Ui_GenerateSDSWidget(object):
     def setupUi(self, GenerateSDSWidget):
         if not GenerateSDSWidget.objectName():
             GenerateSDSWidget.setObjectName(u"GenerateSDSWidget")
         GenerateSDSWidget.resize(714, 584)
-        self.gridLayout = QGridLayout(GenerateSDSWidget)
-        self.gridLayout.setObjectName(u"gridLayout")
+        self.verticalLayout = QVBoxLayout(GenerateSDSWidget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.datasetGroupBox = QGroupBox(GenerateSDSWidget)
         self.datasetGroupBox.setObjectName(u"datasetGroupBox")
         self.formLayout = QFormLayout(self.datasetGroupBox)
@@ -81,7 +81,7 @@ class Ui_GenerateSDSWidget(object):
         self.formLayout.setWidget(4, QFormLayout.FieldRole, self.lineEditDatasetAcknowledgments)
 
 
-        self.gridLayout.addWidget(self.datasetGroupBox, 0, 0, 1, 1)
+        self.verticalLayout.addWidget(self.datasetGroupBox)
 
         self.submissionGroupBox = QGroupBox(GenerateSDSWidget)
         self.submissionGroupBox.setObjectName(u"submissionGroupBox")
@@ -112,17 +112,16 @@ class Ui_GenerateSDSWidget(object):
 
         self.submissionFormLayout.setWidget(2, QFormLayout.LabelRole, self.labelMilestoneCompletionDate)
 
-        self.dateEditMilestoneCompletionDate = QDateEdit(self.submissionGroupBox)
-        self.dateEditMilestoneCompletionDate.setObjectName(u"dateEditMilestoneCompletionDate")
+        self.calendarWidgetMilestoneCompletionDate = QCalendarWidget(self.submissionGroupBox)
+        self.calendarWidgetMilestoneCompletionDate.setObjectName(u"calendarWidgetMilestoneCompletionDate")
 
-        self.submissionFormLayout.setWidget(2, QFormLayout.FieldRole, self.dateEditMilestoneCompletionDate)
+        self.submissionFormLayout.setWidget(2, QFormLayout.FieldRole, self.calendarWidgetMilestoneCompletionDate)
 
 
-        self.gridLayout.addWidget(self.submissionGroupBox, 1, 0, 1, 1)
+        self.verticalLayout.addWidget(self.submissionGroupBox)
 
         self.manifestGroupBox = QGroupBox(GenerateSDSWidget)
         self.manifestGroupBox.setObjectName(u"manifestGroupBox")
-        self.manifestGroupBox.setEnabled(False)
         self.manifestFormLayout = QFormLayout(self.manifestGroupBox)
         self.manifestFormLayout.setObjectName(u"manifestFormLayout")
         self.labelSpecies = QLabel(self.manifestGroupBox)
@@ -146,12 +145,29 @@ class Ui_GenerateSDSWidget(object):
         self.manifestFormLayout.setWidget(1, QFormLayout.FieldRole, self.lineEditOrgan)
 
 
-        self.gridLayout.addWidget(self.manifestGroupBox, 2, 0, 1, 1)
+        self.verticalLayout.addWidget(self.manifestGroupBox)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer)
 
         self.pushButtonDone = QPushButton(GenerateSDSWidget)
         self.pushButtonDone.setObjectName(u"pushButtonDone")
 
-        self.gridLayout.addWidget(self.pushButtonDone, 3, 0, 1, 1)
+        self.horizontalLayout.addWidget(self.pushButtonDone)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_2)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout)
 
 
         self.retranslateUi(GenerateSDSWidget)

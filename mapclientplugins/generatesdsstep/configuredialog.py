@@ -1,4 +1,3 @@
-
 from PySide6 import QtWidgets
 from mapclientplugins.generatesdsstep.ui_configuredialog import Ui_ConfigureDialog
 import os.path
@@ -28,9 +27,9 @@ class ConfigureDialog(QtWidgets.QDialog):
         self.identifierOccursCount = None
         self._previousLocation = ''
 
-        self._makeConnections()
+        self._make_connections()
 
-    def _makeConnections(self):
+    def _make_connections(self):
         self._ui.lineEdit0.textChanged.connect(self.validate)
         self._ui.lineEditDatasetName.textChanged.connect(self.validate)
         self._ui.lineEditDirectoryLocation.textChanged.connect(self.validate)
@@ -62,19 +61,21 @@ class ConfigureDialog(QtWidgets.QDialog):
         Override the accept method so that we can confirm saving an
         invalid configuration.
         """
-        result = QtWidgets.QMessageBox.Yes
+        result = QtWidgets.QMessageBox.StandardButton.Yes
         if not self.validate():
-            result = QtWidgets.QMessageBox.warning(self, 'Invalid Configuration',
+            result = QtWidgets.QMessageBox.warning(
+                self, 'Invalid Configuration',
                 'This configuration is invalid.  Unpredictable behaviour may result if you choose \'Yes\', '
                 'are you sure you want to save this configuration?',
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
-        elif self.dataset_exists():
-            result = QtWidgets.QMessageBox.warning(self, 'Dataset exists',
+                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No, QtWidgets.QMessageBox.StandardButton.No)
+        elif self.dataset_exists() and self._ui.checkBoxOverwriteExisting.isChecked():
+            result = QtWidgets.QMessageBox.warning(
+                self, 'Dataset exists',
                 'The dataset folder already exists. Files in the folder may be overwritten if you choose \'Yes\', '
                 'are you sure you want to save this configuration?',
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No, QtWidgets.QMessageBox.StandardButton.No)
 
-        if result == QtWidgets.QMessageBox.Yes:
+        if result == QtWidgets.QMessageBox.StandardButton.Yes:
             QtWidgets.QDialog.accept(self)
 
     def dataset_exists(self):
@@ -123,7 +124,9 @@ class ConfigureDialog(QtWidgets.QDialog):
         config = {'identifier': self._ui.lineEdit0.text(), 'DatasetName': self._ui.lineEditDatasetName.text(),
                   'DatasetType': self._ui.comboBoxDatasetType.currentText(),
                   'DerivativeExists': self._ui.checkBoxDerivativeDataExists.isChecked(),
-                  'Directory': self._output_location(), 'outputDir': output_dir}
+                  'Directory': self._output_location(),
+                  'OverwriteExisting': self._ui.checkBoxOverwriteExisting.isChecked(),
+                  'outputDir': output_dir}
         return config
 
     def setConfig(self, config):
@@ -137,4 +140,5 @@ class ConfigureDialog(QtWidgets.QDialog):
         self._ui.lineEditDatasetName.setText(config['DatasetName'])
         self._ui.comboBoxDatasetType.setCurrentText(config['DatasetType'])
         self._ui.checkBoxDerivativeDataExists.setChecked(config['DerivativeExists'])
+        self._ui.checkBoxOverwriteExisting.setChecked(config['OverwriteExisting'])
         self._ui.lineEditDirectoryLocation.setText(config['Directory'])

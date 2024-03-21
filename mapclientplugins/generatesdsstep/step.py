@@ -61,27 +61,18 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         self._portData1 = None  # http://physiomeproject.org/workflow/1.0/rdf-schema#sds_protocol
         # Config:
         self._config = {'identifier': '', 'DatasetName': '', 'DatasetType': '', 'Directory': '',
-                        'DerivativeExists': False, 'outputDir': ''}
+                        'DerivativeExists': False, 'outputDir': '', 'OverwriteExisting': False}
 
-    def execute(self):
-        """
-        Add your code here that will kick off the execution of the step.
-        Make sure you call the _doneExecution() method when finished.  This method
-        may be connected up to a button in a widget for example.
-        """
-        # Put your execute step code here before calling the '_doneExecution' method.
-        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
-        output_dir = self._config['outputDir'] if os.path.isabs(self._config['outputDir']) else os.path.join(
-            self._location, self._config['outputDir'])
-        output_dir = os.path.realpath(output_dir)
+    def _prepare_layout(self, output_dir):
         try:
+            QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
             layout = PROTOCOL_LAYOUT[self._config['DatasetType']]
             generate_folders(output_dir, layout.dirs())
             here = os.path.dirname(__file__)
-            shutil.copytree(os.path.join(here, 'resources', 'required'), output_dir, dirs_exist_ok=True)
-            # shutil.copytree(os.path.join(here, 'resources', 'others'), output_dir, dirs_exist_ok=True)
-            if layout.resource_dir():
-                shutil.copytree(os.path.join(here, 'resources', layout.resource_dir()), output_dir, dirs_exist_ok=True)
+            for _f in layout.files():
+                output_file = os.path.join(output_dir, _f)
+                if not os.path.isfile(output_file) or self._config['OverwriteExisting']:
+                    shutil.copy2(os.path.join(here, 'resources', _f), output_file)
             if self._config['DerivativeExists']:
                 generate_folders(output_dir, DERIVATIVE_FOLDER)
         except shutil.Error as exc:
@@ -92,8 +83,9 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         finally:
             QtWidgets.QApplication.restoreOverrideCursor()
 
-        QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
+    def _populate_protocol_data(self, output_dir):
         try:
+            QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
             if self._portData1:
                 if self._portData1['name'] == 'SimpleScaffold':
                     model = self._main_window.model()
@@ -132,7 +124,16 @@ class GenerateSDSStep(WorkflowStepMountPoint):
 
                     workflow_location = os.path.join(output_dir, 'primary')
                     wf = wm.create_empty_workflow(workflow_location)
+                    print(dir(wf))
+                    print(wf.fileName)
+                    print(wf.fileName())
                     ws.create_from(wf, required_steps, workflow_location)
+                    wf_file = os.path.basename(wf.fileName())
+                    scaffold_info = {
+                        'mapping-tools-workflow-file': wf_file,
+                    }
+                    with open(os.path.join(output_dir, 'primary', 'scaffold_info.json'), 'w') as f:
+                        json.dump(scaffold_info, f)
 
         except shutil.Error as exc:
             self._show_critical_error()
@@ -142,6 +143,19 @@ class GenerateSDSStep(WorkflowStepMountPoint):
             raise exc
         finally:
             QtWidgets.QApplication.restoreOverrideCursor()
+
+    def execute(self):
+        """
+        Add your code here that will kick off the execution of the step.
+        Make sure you call the _doneExecution() method when finished.  This method
+        may be connected up to a button in a widget for example.
+        """
+        output_dir = self._config['outputDir'] if os.path.isabs(self._config['outputDir']) else os.path.join(
+            self._location, self._config['outputDir'])
+        output_dir = os.path.realpath(output_dir)
+
+        self._prepare_layout(output_dir)
+        self._populate_protocol_data(output_dir)
 
         self._view = GenerateSDSWidget(output_dir, self._config['DatasetType'])
         self._view.registerDoneExecution(self._doneExecution)

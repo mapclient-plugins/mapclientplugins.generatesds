@@ -77,7 +77,7 @@ class Ui_ConfigureDialog(object):
         self.labelOutputDirectory = QLabel(self.configGroupBox)
         self.labelOutputDirectory.setObjectName(u"labelOutputDirectory")
 
-        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.labelOutputDirectory)
+        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.labelOutputDirectory)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -92,7 +92,17 @@ class Ui_ConfigureDialog(object):
         self.horizontalLayout.addWidget(self.pushButtonDirectoryChooser)
 
 
-        self.formLayout.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout)
+        self.formLayout.setLayout(5, QFormLayout.FieldRole, self.horizontalLayout)
+
+        self.labelOverwriteExisting = QLabel(self.configGroupBox)
+        self.labelOverwriteExisting.setObjectName(u"labelOverwriteExisting")
+
+        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.labelOverwriteExisting)
+
+        self.checkBoxOverwriteExisting = QCheckBox(self.configGroupBox)
+        self.checkBoxOverwriteExisting.setObjectName(u"checkBoxOverwriteExisting")
+
+        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.checkBoxOverwriteExisting)
 
 
         self.gridLayout.addWidget(self.configGroupBox, 0, 0, 1, 1)
@@ -115,9 +125,9 @@ class Ui_ConfigureDialog(object):
     def retranslateUi(self, ConfigureDialog):
         ConfigureDialog.setWindowTitle(QCoreApplication.translate("ConfigureDialog", u"Configure generatesds", None))
         self.configGroupBox.setTitle("")
-        self.label0.setText(QCoreApplication.translate("ConfigureDialog", u"identifier:  ", None))
-        self.labelDatasetName.setText(QCoreApplication.translate("ConfigureDialog", u"Dataset Name:  ", None))
-        self.labelDatasetType.setText(QCoreApplication.translate("ConfigureDialog", u"Dataset Type:  ", None))
+        self.label0.setText(QCoreApplication.translate("ConfigureDialog", u"Identifier:  ", None))
+        self.labelDatasetName.setText(QCoreApplication.translate("ConfigureDialog", u"Dataset name:  ", None))
+        self.labelDatasetType.setText(QCoreApplication.translate("ConfigureDialog", u"Dataset type:  ", None))
         self.comboBoxDatasetType.setItemText(0, QCoreApplication.translate("ConfigureDialog", u"Code", None))
         self.comboBoxDatasetType.setItemText(1, QCoreApplication.translate("ConfigureDialog", u"Experiment", None))
         self.comboBoxDatasetType.setItemText(2, QCoreApplication.translate("ConfigureDialog", u"Scaffold", None))
@@ -126,5 +136,7 @@ class Ui_ConfigureDialog(object):
         self.checkBoxDerivativeDataExists.setText(QCoreApplication.translate("ConfigureDialog", u"Exists", None))
         self.labelOutputDirectory.setText(QCoreApplication.translate("ConfigureDialog", u"Output directory:  ", None))
         self.pushButtonDirectoryChooser.setText(QCoreApplication.translate("ConfigureDialog", u"...", None))
+        self.labelOverwriteExisting.setText(QCoreApplication.translate("ConfigureDialog", u"Overwrite existing:", None))
+        self.checkBoxOverwriteExisting.setText("")
     # retranslateUi
 

@@ -13,8 +13,8 @@
   <property name="windowTitle">
    <string>GenerateSDS Widget</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
     <widget class="QGroupBox" name="datasetGroupBox">
      <property name="title">
       <string>Dataset description</string>
@@ -73,7 +73,7 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item>
     <widget class="QGroupBox" name="submissionGroupBox">
      <property name="title">
       <string>Submission</string>
@@ -107,16 +107,13 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QDateEdit" name="dateEditMilestoneCompletionDate"/>
+       <widget class="QCalendarWidget" name="calendarWidgetMilestoneCompletionDate"/>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item>
     <widget class="QGroupBox" name="manifestGroupBox">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="title">
       <string>Scaffold manifest</string>
      </property>
@@ -144,12 +141,55 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QPushButton" name="pushButtonDone">
-     <property name="text">
-      <string>Done</string>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
      </property>
-    </widget>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonDone">
+       <property name="text">
+        <string>Done</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
