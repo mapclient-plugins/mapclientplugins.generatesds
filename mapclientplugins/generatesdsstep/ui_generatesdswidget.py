@@ -40,11 +40,12 @@ class Ui_GenerateSDSWidget(object):
 
         self.comboBox__dataset_description__Title = QComboBox(self.groupBoxBasicInformation)
         self.comboBox__dataset_description__Title.setObjectName(u"comboBox__dataset_description__Title")
-        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Title.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Title.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Title.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Title.setEditable(True)
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.comboBox__dataset_description__Title)
@@ -58,6 +59,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Subtitle.setObjectName(u"comboBox__dataset_description__Subtitle")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Subtitle.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Subtitle.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Subtitle.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Subtitle.setEditable(True)
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.comboBox__dataset_description__Subtitle)
@@ -71,6 +73,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Keywords.setObjectName(u"comboBox__dataset_description__Keywords")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Keywords.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Keywords.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Keywords.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Keywords.setEditable(True)
 
         self.formLayout.setWidget(2, QFormLayout.FieldRole, self.comboBox__dataset_description__Keywords)
@@ -84,6 +87,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Funding.setObjectName(u"comboBox__dataset_description__Funding")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Funding.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Funding.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Funding.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Funding.setEditable(True)
 
         self.formLayout.setWidget(3, QFormLayout.FieldRole, self.comboBox__dataset_description__Funding)
@@ -97,6 +101,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Acknowledgments.setObjectName(u"comboBox__dataset_description__Acknowledgments")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Acknowledgments.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Acknowledgments.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Acknowledgments.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Acknowledgments.setEditable(True)
 
         self.formLayout.setWidget(4, QFormLayout.FieldRole, self.comboBox__dataset_description__Acknowledgments)
@@ -117,6 +122,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Study_purpose.setObjectName(u"comboBox__dataset_description__Study_purpose")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_purpose.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Study_purpose.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Study_purpose.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Study_purpose.setEditable(True)
 
         self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.comboBox__dataset_description__Study_purpose)
@@ -130,6 +136,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Study_data_collection.setObjectName(u"comboBox__dataset_description__Study_data_collection")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_data_collection.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Study_data_collection.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Study_data_collection.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Study_data_collection.setEditable(True)
 
         self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.comboBox__dataset_description__Study_data_collection)
@@ -148,6 +155,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Study_organ_system.setObjectName(u"comboBox__dataset_description__Study_organ_system")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_organ_system.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Study_organ_system.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Study_organ_system.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Study_organ_system.setEditable(True)
 
         self.formLayout_2.setWidget(4, QFormLayout.FieldRole, self.comboBox__dataset_description__Study_organ_system)
@@ -166,6 +174,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Study_technique.setObjectName(u"comboBox__dataset_description__Study_technique")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_technique.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Study_technique.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Study_technique.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Study_technique.setEditable(True)
 
         self.formLayout_2.setWidget(7, QFormLayout.FieldRole, self.comboBox__dataset_description__Study_technique)
@@ -179,6 +188,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Study_collection_title.setObjectName(u"comboBox__dataset_description__Study_collection_title")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_collection_title.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Study_collection_title.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Study_collection_title.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Study_collection_title.setEditable(True)
 
         self.formLayout_2.setWidget(8, QFormLayout.FieldRole, self.comboBox__dataset_description__Study_collection_title)
@@ -209,6 +219,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__manifest__species.setObjectName(u"comboBox__manifest__species")
         sizePolicy.setHeightForWidth(self.comboBox__manifest__species.sizePolicy().hasHeightForWidth())
         self.comboBox__manifest__species.setSizePolicy(sizePolicy)
+        self.comboBox__manifest__species.setMinimumSize(QSize(127, 0))
         self.comboBox__manifest__species.setEditable(True)
 
         self.formLayout_5.setWidget(0, QFormLayout.FieldRole, self.comboBox__manifest__species)
@@ -222,6 +233,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__manifest__organ.setObjectName(u"comboBox__manifest__organ")
         sizePolicy.setHeightForWidth(self.comboBox__manifest__organ.sizePolicy().hasHeightForWidth())
         self.comboBox__manifest__organ.setSizePolicy(sizePolicy)
+        self.comboBox__manifest__organ.setMinimumSize(QSize(127, 0))
         self.comboBox__manifest__organ.setEditable(True)
 
         self.formLayout_5.setWidget(1, QFormLayout.FieldRole, self.comboBox__manifest__organ)
@@ -247,6 +259,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__submission__Consortium_data_standard.setObjectName(u"comboBox__submission__Consortium_data_standard")
         sizePolicy.setHeightForWidth(self.comboBox__submission__Consortium_data_standard.sizePolicy().hasHeightForWidth())
         self.comboBox__submission__Consortium_data_standard.setSizePolicy(sizePolicy)
+        self.comboBox__submission__Consortium_data_standard.setMinimumSize(QSize(127, 0))
         self.comboBox__submission__Consortium_data_standard.setEditable(True)
 
         self.formLayout_4.setWidget(0, QFormLayout.FieldRole, self.comboBox__submission__Consortium_data_standard)
@@ -260,6 +273,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__submission__Funding_consortium.setObjectName(u"comboBox__submission__Funding_consortium")
         sizePolicy.setHeightForWidth(self.comboBox__submission__Funding_consortium.sizePolicy().hasHeightForWidth())
         self.comboBox__submission__Funding_consortium.setSizePolicy(sizePolicy)
+        self.comboBox__submission__Funding_consortium.setMinimumSize(QSize(127, 0))
         self.comboBox__submission__Funding_consortium.setEditable(True)
 
         self.formLayout_4.setWidget(1, QFormLayout.FieldRole, self.comboBox__submission__Funding_consortium)
@@ -273,6 +287,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__submission__Award_number.setObjectName(u"comboBox__submission__Award_number")
         sizePolicy.setHeightForWidth(self.comboBox__submission__Award_number.sizePolicy().hasHeightForWidth())
         self.comboBox__submission__Award_number.setSizePolicy(sizePolicy)
+        self.comboBox__submission__Award_number.setMinimumSize(QSize(127, 0))
         self.comboBox__submission__Award_number.setEditable(True)
 
         self.formLayout_4.setWidget(2, QFormLayout.FieldRole, self.comboBox__submission__Award_number)
@@ -286,6 +301,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__submission__Milestone_achieved.setObjectName(u"comboBox__submission__Milestone_achieved")
         sizePolicy.setHeightForWidth(self.comboBox__submission__Milestone_achieved.sizePolicy().hasHeightForWidth())
         self.comboBox__submission__Milestone_achieved.setSizePolicy(sizePolicy)
+        self.comboBox__submission__Milestone_achieved.setMinimumSize(QSize(127, 0))
         self.comboBox__submission__Milestone_achieved.setEditable(True)
 
         self.formLayout_4.setWidget(3, QFormLayout.FieldRole, self.comboBox__submission__Milestone_achieved)
@@ -316,6 +332,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Identifier_description.setObjectName(u"comboBox__dataset_description__Identifier_description")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Identifier_description.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Identifier_description.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Identifier_description.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Identifier_description.setEditable(True)
 
         self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.comboBox__dataset_description__Identifier_description)
@@ -329,6 +346,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Relation_type.setObjectName(u"comboBox__dataset_description__Relation_type")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Relation_type.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Relation_type.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Relation_type.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Relation_type.setEditable(True)
 
         self.formLayout_3.setWidget(1, QFormLayout.FieldRole, self.comboBox__dataset_description__Relation_type)
@@ -342,6 +360,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Identifier.setObjectName(u"comboBox__dataset_description__Identifier")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Identifier.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Identifier.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Identifier.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Identifier.setEditable(True)
 
         self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.comboBox__dataset_description__Identifier)
@@ -355,6 +374,7 @@ class Ui_GenerateSDSWidget(object):
         self.comboBox__dataset_description__Identifier_type.setObjectName(u"comboBox__dataset_description__Identifier_type")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Identifier_type.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Identifier_type.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Identifier_type.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Identifier_type.setEditable(True)
 
         self.formLayout_3.setWidget(3, QFormLayout.FieldRole, self.comboBox__dataset_description__Identifier_type)

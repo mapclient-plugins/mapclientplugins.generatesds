@@ -32,10 +32,16 @@
         <item row="0" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Title">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -52,10 +58,16 @@
         <item row="1" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Subtitle">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -72,10 +84,16 @@
         <item row="2" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Keywords">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -92,10 +110,16 @@
         <item row="3" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Funding">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -112,10 +136,16 @@
         <item row="4" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Acknowledgments">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -141,10 +171,16 @@
         <item row="0" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Study_purpose">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -161,10 +197,16 @@
         <item row="1" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Study_data_collection">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -188,10 +230,16 @@
         <item row="4" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Study_organ_system">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -215,10 +263,16 @@
         <item row="7" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Study_technique">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -235,10 +289,16 @@
         <item row="8" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Study_collection_title">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -270,10 +330,16 @@
         <item row="0" column="1">
          <widget class="QComboBox" name="comboBox__manifest__species">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -290,10 +356,16 @@
         <item row="1" column="1">
          <widget class="QComboBox" name="comboBox__manifest__organ">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -323,10 +395,16 @@
         <item row="0" column="1">
          <widget class="QComboBox" name="comboBox__submission__Consortium_data_standard">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -343,10 +421,16 @@
         <item row="1" column="1">
          <widget class="QComboBox" name="comboBox__submission__Funding_consortium">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -363,10 +447,16 @@
         <item row="2" column="1">
          <widget class="QComboBox" name="comboBox__submission__Award_number">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -383,10 +473,16 @@
         <item row="3" column="1">
          <widget class="QComboBox" name="comboBox__submission__Milestone_achieved">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -422,10 +518,16 @@
         <item row="0" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Identifier_description">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -442,10 +544,16 @@
         <item row="1" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Relation_type">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -462,10 +570,16 @@
         <item row="2" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Identifier">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>
@@ -482,10 +596,16 @@
         <item row="3" column="1">
          <widget class="QComboBox" name="comboBox__dataset_description__Identifier_type">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>127</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="editable">
            <bool>true</bool>

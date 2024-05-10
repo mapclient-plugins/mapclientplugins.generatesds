@@ -32,11 +32,12 @@ class Ui_ContributorInformation(object):
 
         self.comboBox__dataset_description__Contributor_name = QComboBox(ContributorInformation)
         self.comboBox__dataset_description__Contributor_name.setObjectName(u"comboBox__dataset_description__Contributor_name")
-        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Contributor_name.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Contributor_name.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Contributor_name.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Contributor_name.setEditable(True)
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.comboBox__dataset_description__Contributor_name)
@@ -50,6 +51,7 @@ class Ui_ContributorInformation(object):
         self.comboBox__dataset_description__Contributor_ORCiD.setObjectName(u"comboBox__dataset_description__Contributor_ORCiD")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Contributor_ORCiD.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Contributor_ORCiD.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Contributor_ORCiD.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Contributor_ORCiD.setEditable(True)
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.comboBox__dataset_description__Contributor_ORCiD)
@@ -63,6 +65,7 @@ class Ui_ContributorInformation(object):
         self.comboBox__dataset_description__Contributor_affiliation.setObjectName(u"comboBox__dataset_description__Contributor_affiliation")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Contributor_affiliation.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Contributor_affiliation.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Contributor_affiliation.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Contributor_affiliation.setEditable(True)
 
         self.formLayout.setWidget(2, QFormLayout.FieldRole, self.comboBox__dataset_description__Contributor_affiliation)
@@ -76,6 +79,7 @@ class Ui_ContributorInformation(object):
         self.comboBox__dataset_description__Contributor_role.setObjectName(u"comboBox__dataset_description__Contributor_role")
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Contributor_role.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Contributor_role.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Contributor_role.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Contributor_role.setEditable(True)
 
         self.formLayout.setWidget(3, QFormLayout.FieldRole, self.comboBox__dataset_description__Contributor_role)

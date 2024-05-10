@@ -24,10 +24,16 @@
    <item row="0" column="1">
     <widget class="QComboBox" name="comboBox__dataset_description__Contributor_name">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>127</width>
+       <height>0</height>
+      </size>
      </property>
      <property name="editable">
       <bool>true</bool>
@@ -44,10 +50,16 @@
    <item row="1" column="1">
     <widget class="QComboBox" name="comboBox__dataset_description__Contributor_ORCiD">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>127</width>
+       <height>0</height>
+      </size>
      </property>
      <property name="editable">
       <bool>true</bool>
@@ -64,10 +76,16 @@
    <item row="2" column="1">
     <widget class="QComboBox" name="comboBox__dataset_description__Contributor_affiliation">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>127</width>
+       <height>0</height>
+      </size>
      </property>
      <property name="editable">
       <bool>true</bool>
@@ -84,10 +102,16 @@
    <item row="3" column="1">
     <widget class="QComboBox" name="comboBox__dataset_description__Contributor_role">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>127</width>
+       <height>0</height>
+      </size>
      </property>
      <property name="editable">
       <bool>true</bool>

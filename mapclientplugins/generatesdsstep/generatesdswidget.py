@@ -35,17 +35,17 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui = Ui_GenerateSDSWidget()
         self._ui.setupUi(self)
         self._ui.groupBoxManifest.setVisible(dataset_type == "Scaffold")
-        self._add_contributor_information_tab()
+        self._add_contributor_information_tab(load_database_info=False)
 
         application_data_directory = get_data_directory()
-        self._database = {}
+        self._database = {"Contributor_information": []}
         self._database_filename = os.path.join(application_data_directory, GENERATE_SDS_DATABASE_FILENAME)
 
         self._dataset_loc = dataset_loc
         self._dataset_type = dataset_type
 
-        self._load_database()
         self._load_information()
+        self._load_database()
 
         self._make_connections()
         self._callback = None
@@ -64,13 +64,25 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             except Timeout:
                 logger.info("Failed to read Generate SDS database.")
 
+        contributor_information = self._database.get("Contributor_information", [])
+        for index in range(self._ui.tabWidgetContributors.count()):
+            widget = self._ui.tabWidgetContributors.widget(index)
+            widget.load_database_contributor_information(contributor_information)
+
+        for attr in self._database:
+            if attr != "Contributor_information":
+                element = getattr(self._ui, attr)
+                for item in self._database[attr]:
+                    if element.findText(item) == -1:
+                        element.addItem(item)
+
     def _save_value_to_file(self, file_destination, file_row, file_column, value):
-        df = pd.read_excel(os.path.join(self._dataset_loc, file_destination), index_col=0).fillna("")
+        df = pd.read_excel(os.path.join(self._dataset_loc, file_destination), index_col=0, dtype=str).fillna("")
         df.at[file_row, file_column] = value
         df.to_excel(os.path.join(self._dataset_loc, file_destination))
 
     def _read_value_from_file(self, file_source, file_row, file_column):
-        df = pd.read_excel(os.path.join(self._dataset_loc, file_source), index_col=0).fillna("")
+        df = pd.read_excel(os.path.join(self._dataset_loc, file_source), index_col=0, dtype=str).fillna("")
         return df.at[file_row, file_column]
 
     def _save_widget_info_to_file(self, owner, attr, method, index=1):
@@ -88,7 +100,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         value_setter(QtCore.QDate.fromString(value)) if attr.startswith("calendarWidget") else value_setter(value)
 
     def _determine_contributor_count(self):
-        tmp_widget = ContributorInformationWidget(self)
+        tmp_widget = ContributorInformationWidget()
         index = 0
 
         self._load_widget_info_from_file(tmp_widget.ui_owner(), "comboBox__dataset_description__Contributor_name", "setCurrentText", index + 1)
@@ -101,6 +113,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             except KeyError:
                 current_name = ""
 
+        tmp_widget.destroy()
+
         return index
 
     def _load_information(self):
@@ -108,7 +122,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
         for attr in dir(self._ui):
             if attr.startswith("comboBox"):
-                self._load_widget_info_from_file(self._ui, attr, "setCurrentText")
+                self._load_widget_info_from_file(self._ui, attr, "addItem")
             elif attr.startswith("plainTextEdit"):
                 self._load_widget_info_from_file(self._ui, attr, "setPlainText")
             elif attr.startswith("calendarWidget"):
@@ -117,9 +131,12 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         contributor_count = self._determine_contributor_count()
         for index in range(contributor_count):
             if index >= self._ui.tabWidgetContributors.count():
-                self._add_contributor_information_tab()
+                self._add_contributor_information_tab(load_database_info=False)
 
-            self._load_widget_info_from_file(self._ui.tabWidgetContributors.widget(index).ui_owner(), "comboBox__dataset_description__Contributor_name", "setCurrentText", index + 1)
+            widget = self._ui.tabWidgetContributors.widget(index)
+            for attr in widget.ui_elements():
+                if attr.startswith("comboBox"):
+                    self._load_widget_info_from_file(widget.ui_owner(), attr, "addItem", index + 1)
 
     def _save_information(self):
         self._save_value_to_file("dataset_description.xlsx", "Type", "Value", self._dataset_type)
@@ -139,13 +156,43 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                     self._save_widget_info_to_file(widget.ui_owner(), attr, "currentText", index + 1)
 
         contributor_count = self._determine_contributor_count()
-        tmp_widget = ContributorInformationWidget(self)
+        tmp_widget = ContributorInformationWidget()
         for index in range(self._ui.tabWidgetContributors.count(), contributor_count):
             for attr in tmp_widget.ui_elements():
                 if attr.startswith("comboBox"):
                     self._save_widget_info_to_file(tmp_widget.ui_owner(), attr, "currentText", index + 1)
 
+        tmp_widget.destroy()
+
     def _update_database(self):
+        contributor_information = self._database.get("Contributor_information", [])
+        for index in range(self._ui.tabWidgetContributors.count()):
+            widget = self._ui.tabWidgetContributors.widget(index)
+            contributor_info = widget.save_database_contributor_information()
+            if contributor_info not in contributor_information:
+                contributor_information.append(contributor_info)
+
+        attributes_of_interest = ["comboBox__dataset_description__Contributor_name", "comboBox__dataset_description__Contributor_ORCiD"]
+        remove_indices = set()
+        for i in range(len(contributor_information)):
+            for j in range(i + 1, len(contributor_information)):
+                for attr in attributes_of_interest:
+                    if contributor_information[i][attr] == contributor_information[j][attr]:
+                        remove_indices.add(j)
+
+        for i in reversed(list(remove_indices)):
+            del contributor_information[i]
+
+        self._database["Contributor_information"] = contributor_information
+
+        for attr in dir(self._ui):
+            if attr.startswith("comboBox"):
+                values = self._database.get(attr, [])
+                element = getattr(self._ui, attr)
+                if element.currentText() not in values:
+                    values.append(element.currentText())
+
+                self._database[attr] = values
         try:
             with FileLock(self._database_filename + ".lock", 3):
                 with open(self._database_filename, "w") as fh:
@@ -156,9 +203,14 @@ class GenerateSDSWidget(QtWidgets.QWidget):
     def _update_ui(self):
         self._ui.pushButtonRemoveContributor.setEnabled(self._ui.tabWidgetContributors.count() > 1)
 
-    def _add_contributor_information_tab(self):
+    def _add_contributor_information_tab(self, checked=False, load_database_info=True):
         new_widget = ContributorInformationWidget(self)
         self._ui.tabWidgetContributors.addTab(new_widget, f"   {self._ui.tabWidgetContributors.count() + 1}   ")
+        if load_database_info:
+            new_widget.load_database_contributor_information(self._database.get("Contributor_information", []))
+            new_widget.clear_current()
+            self._ui.tabWidgetContributors.setCurrentWidget(new_widget)
+
         self._update_ui()
 
     def _remove_contributor_information_tab(self):
