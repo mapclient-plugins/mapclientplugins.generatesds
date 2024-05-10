@@ -88,16 +88,16 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         value_setter(QtCore.QDate.fromString(value)) if attr.startswith("calendarWidget") else value_setter(value)
 
     def _determine_contributor_count(self):
-        widget = self._ui.tabWidgetContributors.widget(0)
+        tmp_widget = ContributorInformationWidget(self)
         index = 0
 
-        self._load_widget_info_from_file(widget.ui_owner(), "comboBox__dataset_description__Contributor_name", "setCurrentText", index + 1)
-        current_name = widget.current_name()
+        self._load_widget_info_from_file(tmp_widget.ui_owner(), "comboBox__dataset_description__Contributor_name", "setCurrentText", index + 1)
+        current_name = tmp_widget.current_name()
         while current_name:
             index += 1
             try:
-                self._load_widget_info_from_file(widget.ui_owner(), "comboBox__dataset_description__Contributor_name", "setCurrentText", index + 1)
-                current_name = widget.current_name()
+                self._load_widget_info_from_file(tmp_widget.ui_owner(), "comboBox__dataset_description__Contributor_name", "setCurrentText", index + 1)
+                current_name = tmp_widget.current_name()
             except KeyError:
                 current_name = ""
 
