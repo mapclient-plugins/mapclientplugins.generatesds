@@ -7,11 +7,11 @@ import shutil
 
 from PySide6 import QtGui, QtWidgets, QtCore
 
-from mapclient.core.utils import copy_step_additional_config_files
+from mapclient.core.utils import copy_step_additional_config_files, get_steps_additional_config_files
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint, workflowStepFactory
 from mapclientplugins.generatesdsstep.configuredialog import ConfigureDialog
 from mapclientplugins.generatesdsstep.generatesdswidget import GenerateSDSWidget
-from mapclientplugins.generatesdsstep.definitions import PROTOCOL_LAYOUT, DERIVATIVE_FOLDER
+from mapclientplugins.generatesdsstep.definitions import PROTOCOL_LAYOUT, DERIVATIVE_FOLDER, SCAFFOLD_INFO_FILE
 
 
 def generate_folders(output_dir, folder_name_list):
@@ -87,10 +87,12 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         try:
             QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
             if self._portData1:
+                print(self._portData1)
                 if self._portData1['name'] == 'SimpleScaffold':
                     model = self._main_window.model()
                     wm = model.workflowManager()
                     ws = wm.scene()
+                    scaffold_creator_config_files = []
                     required_steps = []
                     for i in self._portData1['inputs']:
                         if i['type'] == 'identifier_file':
@@ -106,6 +108,11 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                             step = workflowStepFactory(step_name, target_configuration_dir)
                             step.setIdentifier(step_identifier)
                             step.setLocation(source_configuration_dir)
+
+                            if step.getName() == "Scaffold Creator":
+                                config_files = get_steps_additional_config_files(step)
+                                if len(config_files) > 0:
+                                    scaffold_creator_config_files.append(config_files[0])
 
                             copy_step_additional_config_files(step, source_configuration_dir, target_configuration_dir)
                         elif i['type'] == 'directory':
@@ -124,16 +131,16 @@ class GenerateSDSStep(WorkflowStepMountPoint):
 
                     workflow_location = os.path.join(output_dir, 'primary')
                     wf = wm.create_empty_workflow(workflow_location)
-                    print(dir(wf))
-                    print(wf.fileName)
-                    print(wf.fileName())
                     ws.create_from(wf, required_steps, workflow_location)
                     wf_file = os.path.basename(wf.fileName())
                     scaffold_info = {
+                        'id': 'scaffold-info-using-map-client-workflow',
+                        'version': '1.0.0',
                         'mapping-tools-workflow-file': wf_file,
+                        'scaffold-settings-files': scaffold_creator_config_files,
                     }
-                    with open(os.path.join(output_dir, 'primary', 'scaffold_info.json'), 'w') as f:
-                        json.dump(scaffold_info, f)
+                    with open(os.path.join(output_dir, 'primary', SCAFFOLD_INFO_FILE), 'w') as f:
+                        json.dump(scaffold_info, f, default=lambda o: o.__dict__, sort_keys=True, indent=2)
 
         except shutil.Error as exc:
             self._show_critical_error()
@@ -158,7 +165,7 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         self._populate_protocol_data(output_dir)
 
         self._view = GenerateSDSWidget(output_dir, self._config['DatasetType'])
-        self._view.registerDoneExecution(self._doneExecution)
+        self._view.register_done_execution(self._doneExecution)
         self._setCurrentWidget(self._view)
 
     def _show_critical_error(self):

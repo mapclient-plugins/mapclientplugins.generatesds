@@ -31,7 +31,7 @@ def readfile(filename, split=False):
 
 readme = readfile("README.rst", split=True)[3:]  # Skip title
 source_license = readfile("LICENSE")
-requires = ['PySide6']  # Minimal requirements listing. Insert additional dependencies here.
+requires = ['PySide6', 'filelock']  # Minimal requirements listing. Insert additional dependencies here.
 
 package_resources = [os.path.join(dp, f) for dp, dn, filenames in os.walk(os.path.join(SETUP_DIR, 'mapclientplugins', 'generatesdsstep', 'resources')) for f in filenames]
 

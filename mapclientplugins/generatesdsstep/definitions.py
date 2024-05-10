@@ -1,3 +1,5 @@
+GENERATE_SDS_DATABASE_FILENAME = "generate_sds_settings.json"
+SCAFFOLD_INFO_FILE = "scaffold_info.json"
 DERIVATIVE_FOLDER = {"derivative"}
 
 
