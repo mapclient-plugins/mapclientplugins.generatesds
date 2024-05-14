@@ -9,6 +9,7 @@ from filelock import FileLock, Timeout
 from mapclient.settings.general import get_data_directory
 from mapclientplugins.generatesdsstep.contributorinformationwidget import ContributorInformationWidget
 from mapclientplugins.generatesdsstep.definitions import GENERATE_SDS_DATABASE_FILENAME, SCAFFOLD_INFO_FILE
+from mapclientplugins.generatesdsstep.otherrinformationwidget import OtherInformationWidget
 from mapclientplugins.generatesdsstep.ui_generatesdswidget import Ui_GenerateSDSWidget
 
 logger = logging.getLogger(__name__)
@@ -36,9 +37,10 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui.setupUi(self)
         self._ui.groupBoxManifest.setVisible(dataset_type == "Scaffold")
         self._add_contributor_information_tab(load_database_info=False)
+        self._add_other_information_tab(load_database_info=False)
 
         application_data_directory = get_data_directory()
-        self._database = {"Contributor_information": []}
+        self._database = {"Contributor_information": [], "Other_information": {}}
         self._database_filename = os.path.join(application_data_directory, GENERATE_SDS_DATABASE_FILENAME)
 
         self._dataset_loc = dataset_loc
@@ -54,6 +56,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui.pushButtonDone.clicked.connect(self._done_button_clicked)
         self._ui.pushButtonAddContributor.clicked.connect(self._add_contributor_information_tab)
         self._ui.pushButtonRemoveContributor.clicked.connect(self._remove_contributor_information_tab)
+        self._ui.pushButtonAddOther.clicked.connect(self._add_other_information_tab)
+        self._ui.pushButtonRemoveOther.clicked.connect(self._remove_other_information_tab)
 
     def _load_database(self):
         if os.path.isfile(self._database_filename):
@@ -69,8 +73,13 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             widget = self._ui.tabWidgetContributors.widget(index)
             widget.load_database_contributor_information(contributor_information)
 
+        other_information = self._database.get("Other_information", {})
+        for index in range(self._ui.tabWidgetOthers.count()):
+            widget = self._ui.tabWidgetOthers.widget(index)
+            widget.load_database_other_information(other_information)
+
         for attr in self._database:
-            if attr != "Contributor_information":
+            if attr != "Contributor_information" and attr != "Other_information":
                 element = getattr(self._ui, attr)
                 for item in self._database[attr]:
                     if element.findText(item) == -1:
@@ -117,6 +126,29 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
         return index
 
+    def _determine_other_count(self):
+        tmp_widget = OtherInformationWidget()
+        index = 0
+
+        for attr in tmp_widget.ui_elements():
+            if attr.startswith("comboBox"):
+                self._load_widget_info_from_file(tmp_widget.ui_owner(), attr, "setCurrentText", index + 1)
+
+        while not tmp_widget.is_empty():
+            index += 1
+            try:
+                tmp_widget.destroy()
+                tmp_widget = OtherInformationWidget()
+                for attr in tmp_widget.ui_elements():
+                    if attr.startswith("comboBox"):
+                        self._load_widget_info_from_file(tmp_widget.ui_owner(), attr, "setCurrentText", index + 1)
+            except KeyError:
+                pass
+
+        tmp_widget.destroy()
+
+        return index
+
     def _load_information(self):
         self._create_manifest()
 
@@ -134,6 +166,16 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                 self._add_contributor_information_tab(load_database_info=False)
 
             widget = self._ui.tabWidgetContributors.widget(index)
+            for attr in widget.ui_elements():
+                if attr.startswith("comboBox"):
+                    self._load_widget_info_from_file(widget.ui_owner(), attr, "addItem", index + 1)
+
+        other_count = self._determine_other_count()
+        for index in range(other_count):
+            if index >= self._ui.tabWidgetOthers.count():
+                self._add_other_information_tab(load_database_info=False)
+
+            widget = self._ui.tabWidgetOthers.widget(index)
             for attr in widget.ui_elements():
                 if attr.startswith("comboBox"):
                     self._load_widget_info_from_file(widget.ui_owner(), attr, "addItem", index + 1)
@@ -164,6 +206,21 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
         tmp_widget.destroy()
 
+        for index in range(self._ui.tabWidgetOthers.count()):
+            widget = self._ui.tabWidgetOthers.widget(index)
+            for attr in widget.ui_elements():
+                if attr.startswith("comboBox"):
+                    self._save_widget_info_to_file(widget.ui_owner(), attr, "currentText", index + 1)
+
+        other_count = self._determine_other_count()
+        tmp_widget = OtherInformationWidget()
+        for index in range(self._ui.tabWidgetOthers.count(), other_count):
+            for attr in tmp_widget.ui_elements():
+                if attr.startswith("comboBox"):
+                    self._save_widget_info_to_file(tmp_widget.ui_owner(), attr, "currentText", index + 1)
+
+        tmp_widget.destroy()
+
     def _update_database(self):
         contributor_information = self._database.get("Contributor_information", [])
         for index in range(self._ui.tabWidgetContributors.count()):
@@ -185,6 +242,17 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
         self._database["Contributor_information"] = contributor_information
 
+        other_information = self._database.get("Other_information", {})
+        for index in range(self._ui.tabWidgetOthers.count()):
+            widget = self._ui.tabWidgetOthers.widget(index)
+            other_info = widget.save_database_other_information()
+            for key in other_info:
+                if key not in other_information:
+                    other_information[key] = []
+
+                if other_info[key] and other_info[key] not in other_information[key]:
+                    other_information[key].append(other_info[key])
+
         for attr in dir(self._ui):
             if attr.startswith("comboBox"):
                 values = self._database.get(attr, [])
@@ -193,6 +261,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                     values.append(element.currentText())
 
                 self._database[attr] = values
+
         try:
             with FileLock(self._database_filename + ".lock", 3):
                 with open(self._database_filename, "w") as fh:
@@ -202,6 +271,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
     def _update_ui(self):
         self._ui.pushButtonRemoveContributor.setEnabled(self._ui.tabWidgetContributors.count() > 1)
+        self._ui.pushButtonRemoveOther.setEnabled(self._ui.tabWidgetOthers.count() > 1)
 
     def _add_contributor_information_tab(self, checked=False, load_database_info=True):
         new_widget = ContributorInformationWidget(self)
@@ -213,10 +283,26 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
         self._update_ui()
 
+    def _add_other_information_tab(self, checked=False, load_database_info=True):
+        new_widget = OtherInformationWidget(self)
+        self._ui.tabWidgetOthers.addTab(new_widget, f"   {self._ui.tabWidgetOthers.count() + 1}   ")
+        if load_database_info:
+            new_widget.load_database_other_information(self._database.get("Other_information", {}))
+            new_widget.clear_current()
+            self._ui.tabWidgetOthers.setCurrentWidget(new_widget)
+
+        self._update_ui()
+
     def _remove_contributor_information_tab(self):
         self._ui.tabWidgetContributors.removeTab(self._ui.tabWidgetContributors.currentIndex())
         for index in range(self._ui.tabWidgetContributors.count()):
             self._ui.tabWidgetContributors.setTabText(index, f"   {index + 1}   ")
+        self._update_ui()
+
+    def _remove_other_information_tab(self):
+        self._ui.tabWidgetOthers.removeTab(self._ui.tabWidgetOthers.currentIndex())
+        for index in range(self._ui.tabWidgetOthers.count()):
+            self._ui.tabWidgetOthers.setTabText(index, f"   {index + 1}   ")
         self._update_ui()
 
     def _create_manifest(self):

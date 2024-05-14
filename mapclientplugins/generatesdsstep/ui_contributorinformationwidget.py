@@ -15,7 +15,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QLabel,
+from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QLabel,
     QSizePolicy, QSpacerItem, QWidget)
 
 class Ui_ContributorInformation(object):
@@ -23,12 +23,13 @@ class Ui_ContributorInformation(object):
         if not ContributorInformation.objectName():
             ContributorInformation.setObjectName(u"ContributorInformation")
         ContributorInformation.resize(400, 300)
-        self.formLayout = QFormLayout(ContributorInformation)
-        self.formLayout.setObjectName(u"formLayout")
+        self.gridLayout = QGridLayout(ContributorInformation)
+        self.gridLayout.setObjectName(u"gridLayout")
         self.label = QLabel(ContributorInformation)
         self.label.setObjectName(u"label")
+        self.label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
 
         self.comboBox__dataset_description__Contributor_name = QComboBox(ContributorInformation)
         self.comboBox__dataset_description__Contributor_name.setObjectName(u"comboBox__dataset_description__Contributor_name")
@@ -40,12 +41,13 @@ class Ui_ContributorInformation(object):
         self.comboBox__dataset_description__Contributor_name.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Contributor_name.setEditable(True)
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.comboBox__dataset_description__Contributor_name)
+        self.gridLayout.addWidget(self.comboBox__dataset_description__Contributor_name, 0, 1, 1, 1)
 
         self.label_2 = QLabel(ContributorInformation)
         self.label_2.setObjectName(u"label_2")
+        self.label_2.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_2)
+        self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
 
         self.comboBox__dataset_description__Contributor_ORCiD = QComboBox(ContributorInformation)
         self.comboBox__dataset_description__Contributor_ORCiD.setObjectName(u"comboBox__dataset_description__Contributor_ORCiD")
@@ -54,12 +56,13 @@ class Ui_ContributorInformation(object):
         self.comboBox__dataset_description__Contributor_ORCiD.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Contributor_ORCiD.setEditable(True)
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.comboBox__dataset_description__Contributor_ORCiD)
+        self.gridLayout.addWidget(self.comboBox__dataset_description__Contributor_ORCiD, 1, 1, 1, 1)
 
         self.label_3 = QLabel(ContributorInformation)
         self.label_3.setObjectName(u"label_3")
+        self.label_3.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_3)
+        self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
 
         self.comboBox__dataset_description__Contributor_affiliation = QComboBox(ContributorInformation)
         self.comboBox__dataset_description__Contributor_affiliation.setObjectName(u"comboBox__dataset_description__Contributor_affiliation")
@@ -68,12 +71,13 @@ class Ui_ContributorInformation(object):
         self.comboBox__dataset_description__Contributor_affiliation.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Contributor_affiliation.setEditable(True)
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.comboBox__dataset_description__Contributor_affiliation)
+        self.gridLayout.addWidget(self.comboBox__dataset_description__Contributor_affiliation, 2, 1, 1, 1)
 
         self.label_4 = QLabel(ContributorInformation)
         self.label_4.setObjectName(u"label_4")
+        self.label_4.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_4)
+        self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
 
         self.comboBox__dataset_description__Contributor_role = QComboBox(ContributorInformation)
         self.comboBox__dataset_description__Contributor_role.setObjectName(u"comboBox__dataset_description__Contributor_role")
@@ -82,11 +86,11 @@ class Ui_ContributorInformation(object):
         self.comboBox__dataset_description__Contributor_role.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Contributor_role.setEditable(True)
 
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.comboBox__dataset_description__Contributor_role)
+        self.gridLayout.addWidget(self.comboBox__dataset_description__Contributor_role, 3, 1, 1, 1)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.formLayout.setItem(4, QFormLayout.FieldRole, self.verticalSpacer)
+        self.gridLayout.addItem(self.verticalSpacer, 4, 1, 1, 1)
 
 
         self.retranslateUi(ContributorInformation)
