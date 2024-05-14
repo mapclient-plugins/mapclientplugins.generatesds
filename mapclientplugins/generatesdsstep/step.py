@@ -87,7 +87,6 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         try:
             QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
             if self._portData1:
-                print(self._portData1)
                 if self._portData1['name'] == 'SimpleScaffold':
                     model = self._main_window.model()
                     wm = model.workflowManager()
