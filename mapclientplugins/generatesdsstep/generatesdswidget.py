@@ -35,7 +35,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
         self._ui = Ui_GenerateSDSWidget()
         self._ui.setupUi(self)
-        self._ui.groupBoxManifest.setVisible(dataset_type == "Scaffold")
+        self._ui.groupBoxScaffoldManifest.setVisible(dataset_type == "Scaffold")
+        self._ui.groupBoxParticipantInformation.setVisible(dataset_type != "Scaffold")
         self._add_contributor_information_tab(load_database_info=False)
         self._add_other_information_tab(load_database_info=False)
 
@@ -78,8 +79,9 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             widget = self._ui.tabWidgetOthers.widget(index)
             widget.load_database_other_information(other_information)
 
+        skipped_attr = ["Contributor_information", "Other_information"]
         for attr in self._database:
-            if attr != "Contributor_information" and attr != "Other_information":
+            if attr not in skipped_attr:
                 element = getattr(self._ui, attr)
                 for item in self._database[attr]:
                     if element.findText(item) == -1:
@@ -159,6 +161,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                 self._load_widget_info_from_file(self._ui, attr, "setPlainText")
             elif attr.startswith("calendarWidget"):
                 self._load_widget_info_from_file(self._ui, attr, "setSelectedDate")
+            elif attr.startswith("spinBox"):
+                self._load_widget_info_from_file(self._ui, attr, "valueFromText")
 
         contributor_count = self._determine_contributor_count()
         for index in range(contributor_count):
@@ -190,6 +194,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                 self._save_widget_info_to_file(self._ui, attr, "toPlainText")
             elif attr.startswith("calendarWidget"):
                 self._save_widget_info_to_file(self._ui, attr, "selectedDate")
+            elif attr.startswith("spinBox"):
+                self._save_widget_info_to_file(self._ui, attr, "value")
 
         for index in range(self._ui.tabWidgetContributors.count()):
             widget = self._ui.tabWidgetContributors.widget(index)
