@@ -8,6 +8,7 @@ import shutil
 from PySide6 import QtGui, QtWidgets, QtCore
 
 from mapclient.core.utils import copy_step_additional_config_files, get_steps_additional_config_files
+from mapclient.core.workflow.workflowscene import determine_connections, create_from, get_step_name_from_identifier
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint, workflowStepFactory
 from mapclientplugins.generatesdsstep.configuredialog import ConfigureDialog
 from mapclientplugins.generatesdsstep.generatesdswidget import GenerateSDSWidget
@@ -34,6 +35,12 @@ def generate_folders(output_dir, folder_name_list):
         abs_folder = os.path.join(output_dir, folder_name)
         if not os.path.isdir(abs_folder):
             os.mkdir(abs_folder)
+
+
+def _update_step_index_map(step_index_map, step_name, value_index, index):
+    value = step_index_map.get(step_name, [-1, -1])
+    value[value_index] = index
+    step_index_map[step_name] = value
 
 
 class GenerateSDSStep(WorkflowStepMountPoint):
@@ -90,28 +97,76 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                 if self._portData1['name'] == 'SimpleScaffold':
                     model = self._main_window.model()
                     wm = model.workflowManager()
-                    ws = wm.scene()
-                    scaffold_creator_config_files = []
+
+                    matched_config_files = []
+                    step_index_map = {}
+                    original_index_step_map = {}
+                    original_connections = {}
+                    workflow_data = {}
                     required_steps = []
                     for i in self._portData1['inputs']:
                         if i['type'] == 'identifier_file':
                             source_configuration_dir = os.path.dirname(i['value'])
                             target_configuration_dir = os.path.join(output_dir, i['destination'])
 
+                            wf = wm.load_workflow_virtually(source_configuration_dir)
+
                             shutil.copy(i['value'], target_configuration_dir)
 
                             step_identifier, configuration_ext = os.path.splitext(os.path.basename(i['value']))
-                            wf = wm.load_workflow_virtually(source_configuration_dir)
-                            step_name = ws.get_step_name_from_identifier(wf, step_identifier)
+                            step_name = get_step_name_from_identifier(wf, step_identifier)
+                            _update_step_index_map(step_index_map, step_identifier, 1, len(required_steps))
                             required_steps.append((step_name, step_identifier))
+
                             step = workflowStepFactory(step_name, target_configuration_dir)
                             step.setIdentifier(step_identifier)
                             step.setLocation(source_configuration_dir)
 
+                            def _mock_identifier_occurs_count(arg):
+                                return 1
+
+                            step._identifierOccursCount = _mock_identifier_occurs_count
+                            with open(i['value']) as f:
+                                config = f.read()
+                            step.deserialize(config)
+
+                            set_workflow_data = False
+                            step_connections = None
+                            scaffold_creator_index = None
+                            argon_viewer_index = None
                             if step.getName() == "Scaffold Creator":
+                                set_workflow_data = True
+                                wf.beginGroup('nodes')
+                                node_count = wf.beginReadArray('nodelist')
+                                for node_index in range(node_count):
+                                    wf.setArrayIndex(node_index)
+                                    name = wf.value('name')
+                                    identifier = wf.value('identifier')
+                                    original_index_step_map[node_index] = identifier
+                                    connections = determine_connections(wf, node_index)
+                                    original_connections[node_index] = connections
+                                    _update_step_index_map(step_index_map, identifier, 0, node_index)
+                                    if name == "Scaffold Creator":
+                                        scaffold_creator_index = node_index
+                                        step_connections = connections
+                                    elif name == "Argon Viewer":
+                                        argon_viewer_index = node_index
+
+                                wf.endArray()
+                                wf.endGroup()
+
                                 config_files = get_steps_additional_config_files(step)
                                 if len(config_files) > 0:
-                                    scaffold_creator_config_files.append(config_files[0])
+                                    matched_config_files.append(config_files[0])
+                            elif step.getName() == "Argon Viewer":
+                                set_workflow_data = True
+
+                            if set_workflow_data:
+                                config_files = get_steps_additional_config_files(step)
+                                if len(config_files) > 0:
+                                    workflow_data[step_identifier] = config_files[0]
+                                if step_connections and _valid_connection(step_connections[0], scaffold_creator_index, argon_viewer_index):
+                                    workflow_data['Connection'] = step_connections[0]
 
                             copy_step_additional_config_files(step, source_configuration_dir, target_configuration_dir)
                         elif i['type'] == 'directory':
@@ -128,15 +183,37 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                             with open(os.path.join(output_dir, i['destination']), 'w') as f:
                                 json.dump(i['value'], f)
 
+                    workflow_data['Connection'] = (
+                        step_index_map[original_index_step_map[workflow_data['Connection'][0]]][1],
+                        workflow_data['Connection'][1],
+                        step_index_map[original_index_step_map[workflow_data['Connection'][2]]][1],
+                        workflow_data['Connection'][3],
+                        workflow_data['Connection'][4],
+                    )
+
+                    new_connections = []
+                    for required_step in required_steps:
+                        required_identifier = required_step[1]
+                        old_index, new_index = step_index_map[required_identifier]
+                        step_connections = []
+                        for connection in original_connections[old_index]:
+                            new_connection_start = step_index_map[original_index_step_map[connection[0]]][1]
+                            new_connection_end = step_index_map[original_index_step_map[connection[2]]][1]
+                            if new_connection_end != -1:
+                                new_connection = (new_connection_start, connection[1], new_connection_end, connection[3], False)
+                                step_connections.append(new_connection)
+
+                        new_connections.append(step_connections)
+
                     workflow_location = os.path.join(output_dir, 'primary')
                     wf = wm.create_empty_workflow(workflow_location)
-                    ws.create_from(wf, required_steps, workflow_location)
+                    create_from(wf, required_steps, new_connections, workflow_location)
                     wf_file = os.path.basename(wf.fileName())
                     scaffold_info = {
                         'id': 'scaffold-info-using-map-client-workflow',
                         'version': '1.0.0',
                         'mapping-tools-workflow-file': wf_file,
-                        'scaffold-settings-files': scaffold_creator_config_files,
+                        'scaffold-settings-files': workflow_data,
                     }
                     with open(os.path.join(output_dir, 'primary', SCAFFOLD_INFO_FILE), 'w') as f:
                         json.dump(scaffold_info, f, default=lambda o: o.__dict__, sort_keys=True, indent=2)
@@ -237,3 +314,9 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         d.identifierOccursCount = self._identifierOccursCount
         d.setConfig(self._config)
         self._configured = d.validate()
+
+
+def _valid_connection(connection_info, scaffold_creator_index, argon_viewer_index):
+    connection_ports_valid = connection_info[1] == 0 and connection_info[3] == 0
+    connection_indexes_valid = connection_info[0] == scaffold_creator_index and connection_info[2] == argon_viewer_index
+    return connection_ports_valid and connection_indexes_valid
