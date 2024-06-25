@@ -19,6 +19,13 @@ def _determine_destination(text, index):
     parts = text.split("__")
     column = "Value" if index == 1 else f"Value {index}"
     row = " ".join(parts[2].split("_"))
+    if "keyword" in text:
+        print('----------------')
+        print(text)
+        print(parts)
+        print(index)
+        print(column)
+        print(row)
     if parts[1] == "manifest":
         parts[1] = os.path.join("primary", "manifest")
         column = row
@@ -28,6 +35,10 @@ def _determine_destination(text, index):
     return parts[1] + ".xlsx", row, column
 
 
+def _flatten(xss):
+    return [x for xs in xss for x in xs]
+
+
 class GenerateSDSWidget(QtWidgets.QWidget):
 
     def __init__(self, dataset_loc, dataset_type, parent=None):
@@ -35,8 +46,12 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
         self._ui = Ui_GenerateSDSWidget()
         self._ui.setupUi(self)
-        self._ui.groupBoxScaffoldManifest.setVisible(dataset_type == "Scaffold")
-        self._ui.groupBoxParticipantInformation.setVisible(dataset_type != "Scaffold")
+        self._ui.stackedWidgetDynamic.setCurrentIndex(1 if dataset_type == "Scaffold" else 0)
+        self._ui.groupBoxDynamic.setTitle("Scaffold manifest" if dataset_type == "Scaffold" else "Subjects and Samples")
+        self._ui.pushButtonAddKeyword.setEnabled(False)
+        self._keywords_layout = QtWidgets.QGridLayout()
+        self._ui.widgetForChips__dataset_description__Keywords.setLayout(self._keywords_layout)
+        self._keyword_chips = [[]]
         self._add_contributor_information_tab(load_database_info=False)
         self._add_other_information_tab(load_database_info=False)
 
@@ -59,6 +74,79 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui.pushButtonRemoveContributor.clicked.connect(self._remove_contributor_information_tab)
         self._ui.pushButtonAddOther.clicked.connect(self._add_other_information_tab)
         self._ui.pushButtonRemoveOther.clicked.connect(self._remove_other_information_tab)
+        self._ui.ignoreComboBox__dataset_description__Keywords.editTextChanged.connect(self._keywords_text_changed)
+        self._ui.pushButtonAddKeyword.clicked.connect(self._add_keyword_clicked)
+
+    def _keywords_text_changed(self, text):
+        self._ui.pushButtonAddKeyword.setEnabled(text != '')
+
+    def _remove_keyword(self):
+        sender = self.sender()
+        senders = _flatten(self._keyword_chips)
+        index = senders.index(sender)
+        del senders[index]
+
+        texts = [t.tabText(0) for t in senders]
+        self._keyword_chips = [[]]
+
+        item = self._keywords_layout.takeAt(0)
+        while item:
+            widget = item.widget()
+            widget.hide()
+            del item
+            item = self._keywords_layout.takeAt(0)
+
+        for text in texts:
+            self._add_keyword(text)
+
+    def _create_chip(self, text):
+        tabbar = QtWidgets.QTabBar()
+        tabbar.setTabsClosable(True)
+        tabbar.tabCloseRequested.connect(self._remove_keyword)
+        tabbar.addTab(text)
+        return tabbar
+
+    def _determine_chip_row_column(self, chip):
+        layout_column_count = []
+        layout_max_width = []
+        for layout_row in self._keyword_chips:
+            layout_column_count.append(len(layout_row))
+            layout_max_width.append([])
+            for existing_chip in layout_row:
+                layout_max_width[-1].append(existing_chip.sizeHint().width())
+
+        max_columns = max(layout_column_count)
+        max_entry_width = [0] * max_columns
+        for i in layout_max_width:
+            for index, j in enumerate(i):
+                max_entry_width[index] = j if j > max_entry_width[index] else max_entry_width[index]
+
+        cur_width = chip.sizeHint().width()
+
+        row_chips = self._keyword_chips[-1]
+        if len(row_chips) < len(max_entry_width):
+            max_entry_width[len(row_chips)] = cur_width
+        else:
+            max_entry_width.append(cur_width)
+
+        proposed_width = sum(max_entry_width)
+        spacing = 12 * len(max_entry_width) + 12
+        if proposed_width + spacing > self._ui.widgetForChips__dataset_description__Keywords.size().width():
+            self._keyword_chips.append([])
+
+        last_row = self._keyword_chips[-1]
+        last_row.append(chip)
+
+        row = len(self._keyword_chips) - 1
+        return row, len(self._keyword_chips[row]) - 1
+
+    def _add_keyword_clicked(self):
+        self._add_keyword(self._ui.ignoreComboBox__dataset_description__Keywords.currentText())
+
+    def _add_keyword(self, text):
+        chip = self._create_chip(text)
+        row, column = self._determine_chip_row_column(chip)
+        self._keywords_layout.addWidget(chip, row, column, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
     def _load_database(self):
         if os.path.isfile(self._database_filename):
@@ -82,10 +170,11 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         skipped_attr = ["Contributor_information", "Other_information"]
         for attr in self._database:
             if attr not in skipped_attr:
-                element = getattr(self._ui, attr)
-                for item in self._database[attr]:
-                    if element.findText(item) == -1:
-                        element.addItem(item)
+                element = getattr(self._ui, attr, None)
+                if element:
+                    for item in self._database[attr]:
+                        if element.findText(item) == -1:
+                            element.addItem(item)
 
     def _save_value_to_file(self, file_destination, file_row, file_column, value):
         df = pd.read_excel(os.path.join(self._dataset_loc, file_destination), index_col=0, dtype=str).fillna("")
@@ -103,12 +192,31 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         value = value_getter().toString() if attr.startswith("calendarWidget") else value_getter()
         self._save_value_to_file(file_destination, file_row, file_column, value)
 
+    def _save_chips_to_file(self, owner, attr):
+        widget = getattr(owner, attr)
+        layout = widget.layout()
+        texts = [child.tabText(0) for child in layout.children()]
+        for index, text in enumerate(texts):
+            file_destination, file_row, file_column = _determine_destination(attr, index)
+            self._save_value_to_file(file_destination, file_row, file_column, text)
+
     def _load_widget_info_from_file(self, owner, attr, method, index=1):
         widget = getattr(owner, attr)
         file_source, file_row, file_column = _determine_destination(attr, index)
         value_setter = getattr(widget, method)
         value = self._read_value_from_file(file_source, file_row, file_column)
         value_setter(QtCore.QDate.fromString(value)) if attr.startswith("calendarWidget") else value_setter(value)
+
+    def _load_chips_from_file(self, owner, attr):
+        widget = getattr(owner, attr)
+        index = 1
+        while index:
+            try:
+                file_source, file_row, file_column = _determine_destination(attr, index)
+                value = self._read_value_from_file(file_source, file_row, file_column)
+                self._add_keyword(value)
+            except KeyError:
+                index = 0
 
     def _determine_contributor_count(self):
         tmp_widget = ContributorInformationWidget()
@@ -163,6 +271,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                 self._load_widget_info_from_file(self._ui, attr, "setSelectedDate")
             elif attr.startswith("spinBox"):
                 self._load_widget_info_from_file(self._ui, attr, "valueFromText")
+            elif attr.startswith("widgetForChips"):
+                self._load_chips_from_file(self._ui, attr)
 
         contributor_count = self._determine_contributor_count()
         for index in range(contributor_count):
@@ -196,6 +306,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                 self._save_widget_info_to_file(self._ui, attr, "selectedDate")
             elif attr.startswith("spinBox"):
                 self._save_widget_info_to_file(self._ui, attr, "value")
+            elif attr.startswith("widgetForChips"):
+                self._save_chips_to_file(self._ui, attr)
 
         for index in range(self._ui.tabWidgetContributors.count()):
             widget = self._ui.tabWidgetContributors.widget(index)

@@ -18,89 +18,44 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QCalendarWidget, QComboBox, QGridLayout,
     QGroupBox, QHBoxLayout, QLabel, QPlainTextEdit,
     QPushButton, QSizePolicy, QSpacerItem, QSpinBox,
-    QTabWidget, QVBoxLayout, QWidget)
+    QStackedWidget, QTabWidget, QVBoxLayout, QWidget)
 
 class Ui_GenerateSDSWidget(object):
     def setupUi(self, GenerateSDSWidget):
         if not GenerateSDSWidget.objectName():
             GenerateSDSWidget.setObjectName(u"GenerateSDSWidget")
         GenerateSDSWidget.resize(988, 839)
-        self.verticalLayout_4 = QVBoxLayout(GenerateSDSWidget)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.verticalLayout_2 = QVBoxLayout(GenerateSDSWidget)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.groupBoxBasicInformation = QGroupBox(GenerateSDSWidget)
         self.groupBoxBasicInformation.setObjectName(u"groupBoxBasicInformation")
         self.gridLayout = QGridLayout(self.groupBoxBasicInformation)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.labelDatasetKeywords = QLabel(self.groupBoxBasicInformation)
-        self.labelDatasetKeywords.setObjectName(u"labelDatasetKeywords")
-        self.labelDatasetKeywords.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout.addWidget(self.labelDatasetKeywords, 2, 0, 1, 1)
-
-        self.comboBox__dataset_description__Acknowledgments = QComboBox(self.groupBoxBasicInformation)
-        self.comboBox__dataset_description__Acknowledgments.setObjectName(u"comboBox__dataset_description__Acknowledgments")
-        sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Acknowledgments.sizePolicy().hasHeightForWidth())
-        self.comboBox__dataset_description__Acknowledgments.setSizePolicy(sizePolicy)
-        self.comboBox__dataset_description__Acknowledgments.setMinimumSize(QSize(127, 0))
-        self.comboBox__dataset_description__Acknowledgments.setEditable(True)
-
-        self.gridLayout.addWidget(self.comboBox__dataset_description__Acknowledgments, 4, 1, 1, 1)
-
-        self.comboBox__dataset_description__Funding = QComboBox(self.groupBoxBasicInformation)
-        self.comboBox__dataset_description__Funding.setObjectName(u"comboBox__dataset_description__Funding")
-        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Funding.sizePolicy().hasHeightForWidth())
-        self.comboBox__dataset_description__Funding.setSizePolicy(sizePolicy)
-        self.comboBox__dataset_description__Funding.setMinimumSize(QSize(127, 0))
-        self.comboBox__dataset_description__Funding.setEditable(True)
-
-        self.gridLayout.addWidget(self.comboBox__dataset_description__Funding, 3, 1, 1, 1)
-
-        self.labelDatasetSubtitle = QLabel(self.groupBoxBasicInformation)
-        self.labelDatasetSubtitle.setObjectName(u"labelDatasetSubtitle")
-        self.labelDatasetSubtitle.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout.addWidget(self.labelDatasetSubtitle, 1, 0, 1, 1)
-
-        self.labelDatasetAcknowledgments = QLabel(self.groupBoxBasicInformation)
-        self.labelDatasetAcknowledgments.setObjectName(u"labelDatasetAcknowledgments")
-        self.labelDatasetAcknowledgments.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout.addWidget(self.labelDatasetAcknowledgments, 4, 0, 1, 1)
-
         self.labelDatasetTitle = QLabel(self.groupBoxBasicInformation)
         self.labelDatasetTitle.setObjectName(u"labelDatasetTitle")
         self.labelDatasetTitle.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout.addWidget(self.labelDatasetTitle, 0, 0, 1, 1)
 
-        self.comboBox__dataset_description__Keywords = QComboBox(self.groupBoxBasicInformation)
-        self.comboBox__dataset_description__Keywords.setObjectName(u"comboBox__dataset_description__Keywords")
-        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Keywords.sizePolicy().hasHeightForWidth())
-        self.comboBox__dataset_description__Keywords.setSizePolicy(sizePolicy)
-        self.comboBox__dataset_description__Keywords.setMinimumSize(QSize(127, 0))
-        self.comboBox__dataset_description__Keywords.setEditable(True)
-
-        self.gridLayout.addWidget(self.comboBox__dataset_description__Keywords, 2, 1, 1, 1)
-
-        self.labelDatasetFunding = QLabel(self.groupBoxBasicInformation)
-        self.labelDatasetFunding.setObjectName(u"labelDatasetFunding")
-        self.labelDatasetFunding.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout.addWidget(self.labelDatasetFunding, 3, 0, 1, 1)
-
         self.comboBox__dataset_description__Title = QComboBox(self.groupBoxBasicInformation)
         self.comboBox__dataset_description__Title.setObjectName(u"comboBox__dataset_description__Title")
+        sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Title.sizePolicy().hasHeightForWidth())
         self.comboBox__dataset_description__Title.setSizePolicy(sizePolicy)
         self.comboBox__dataset_description__Title.setMinimumSize(QSize(127, 0))
         self.comboBox__dataset_description__Title.setEditable(True)
 
         self.gridLayout.addWidget(self.comboBox__dataset_description__Title, 0, 1, 1, 1)
+
+        self.labelDatasetSubtitle = QLabel(self.groupBoxBasicInformation)
+        self.labelDatasetSubtitle.setObjectName(u"labelDatasetSubtitle")
+        self.labelDatasetSubtitle.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout.addWidget(self.labelDatasetSubtitle, 1, 0, 1, 1)
 
         self.comboBox__dataset_description__Subtitle = QComboBox(self.groupBoxBasicInformation)
         self.comboBox__dataset_description__Subtitle.setObjectName(u"comboBox__dataset_description__Subtitle")
@@ -111,9 +66,65 @@ class Ui_GenerateSDSWidget(object):
 
         self.gridLayout.addWidget(self.comboBox__dataset_description__Subtitle, 1, 1, 1, 1)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.labelDatasetFunding = QLabel(self.groupBoxBasicInformation)
+        self.labelDatasetFunding.setObjectName(u"labelDatasetFunding")
+        self.labelDatasetFunding.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout.addItem(self.verticalSpacer_2, 5, 1, 1, 1)
+        self.gridLayout.addWidget(self.labelDatasetFunding, 2, 0, 1, 1)
+
+        self.comboBox__dataset_description__Funding = QComboBox(self.groupBoxBasicInformation)
+        self.comboBox__dataset_description__Funding.setObjectName(u"comboBox__dataset_description__Funding")
+        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Funding.sizePolicy().hasHeightForWidth())
+        self.comboBox__dataset_description__Funding.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Funding.setMinimumSize(QSize(127, 0))
+        self.comboBox__dataset_description__Funding.setEditable(True)
+
+        self.gridLayout.addWidget(self.comboBox__dataset_description__Funding, 2, 1, 1, 1)
+
+        self.labelDatasetAcknowledgments = QLabel(self.groupBoxBasicInformation)
+        self.labelDatasetAcknowledgments.setObjectName(u"labelDatasetAcknowledgments")
+        self.labelDatasetAcknowledgments.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout.addWidget(self.labelDatasetAcknowledgments, 3, 0, 1, 1)
+
+        self.comboBox__dataset_description__Acknowledgments = QComboBox(self.groupBoxBasicInformation)
+        self.comboBox__dataset_description__Acknowledgments.setObjectName(u"comboBox__dataset_description__Acknowledgments")
+        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Acknowledgments.sizePolicy().hasHeightForWidth())
+        self.comboBox__dataset_description__Acknowledgments.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Acknowledgments.setMinimumSize(QSize(127, 0))
+        self.comboBox__dataset_description__Acknowledgments.setEditable(True)
+
+        self.gridLayout.addWidget(self.comboBox__dataset_description__Acknowledgments, 3, 1, 1, 1)
+
+        self.labelDatasetKeywords = QLabel(self.groupBoxBasicInformation)
+        self.labelDatasetKeywords.setObjectName(u"labelDatasetKeywords")
+        self.labelDatasetKeywords.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout.addWidget(self.labelDatasetKeywords, 4, 0, 1, 1)
+
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.ignoreComboBox__dataset_description__Keywords = QComboBox(self.groupBoxBasicInformation)
+        self.ignoreComboBox__dataset_description__Keywords.setObjectName(u"ignoreComboBox__dataset_description__Keywords")
+        sizePolicy.setHeightForWidth(self.ignoreComboBox__dataset_description__Keywords.sizePolicy().hasHeightForWidth())
+        self.ignoreComboBox__dataset_description__Keywords.setSizePolicy(sizePolicy)
+        self.ignoreComboBox__dataset_description__Keywords.setMinimumSize(QSize(127, 0))
+        self.ignoreComboBox__dataset_description__Keywords.setEditable(True)
+
+        self.horizontalLayout_6.addWidget(self.ignoreComboBox__dataset_description__Keywords)
+
+        self.pushButtonAddKeyword = QPushButton(self.groupBoxBasicInformation)
+        self.pushButtonAddKeyword.setObjectName(u"pushButtonAddKeyword")
+
+        self.horizontalLayout_6.addWidget(self.pushButtonAddKeyword)
+
+
+        self.gridLayout.addLayout(self.horizontalLayout_6, 4, 1, 1, 1)
+
+        self.widgetForChips__dataset_description__Keywords = QWidget(self.groupBoxBasicInformation)
+        self.widgetForChips__dataset_description__Keywords.setObjectName(u"widgetForChips__dataset_description__Keywords")
+
+        self.gridLayout.addWidget(self.widgetForChips__dataset_description__Keywords, 5, 1, 1, 1)
 
 
         self.horizontalLayout_4.addWidget(self.groupBoxBasicInformation)
@@ -222,87 +233,93 @@ class Ui_GenerateSDSWidget(object):
 
         self.horizontalLayout_4.addWidget(self.groupBoxStudyInformation)
 
-        self.verticalLayout_2 = QVBoxLayout()
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.groupBoxScaffoldManifest = QGroupBox(GenerateSDSWidget)
-        self.groupBoxScaffoldManifest.setObjectName(u"groupBoxScaffoldManifest")
-        self.gridLayout_3 = QGridLayout(self.groupBoxScaffoldManifest)
-        self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.labelSpecies = QLabel(self.groupBoxScaffoldManifest)
+        self.groupBoxDynamic = QGroupBox(GenerateSDSWidget)
+        self.groupBoxDynamic.setObjectName(u"groupBoxDynamic")
+        self.verticalLayout_4 = QVBoxLayout(self.groupBoxDynamic)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.stackedWidgetDynamic = QStackedWidget(self.groupBoxDynamic)
+        self.stackedWidgetDynamic.setObjectName(u"stackedWidgetDynamic")
+        self.pageSubjectsAndSamples = QWidget()
+        self.pageSubjectsAndSamples.setObjectName(u"pageSubjectsAndSamples")
+        self.gridLayout_6 = QGridLayout(self.pageSubjectsAndSamples)
+        self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.spinBox__dataset_description__Number_of_subjects = QSpinBox(self.pageSubjectsAndSamples)
+        self.spinBox__dataset_description__Number_of_subjects.setObjectName(u"spinBox__dataset_description__Number_of_subjects")
+
+        self.gridLayout_6.addWidget(self.spinBox__dataset_description__Number_of_subjects, 0, 1, 1, 1)
+
+        self.labelNumberOfSubjects = QLabel(self.pageSubjectsAndSamples)
+        self.labelNumberOfSubjects.setObjectName(u"labelNumberOfSubjects")
+        self.labelNumberOfSubjects.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_6.addWidget(self.labelNumberOfSubjects, 0, 0, 1, 1)
+
+        self.spinBox__dataset_description__Number_of_samples = QSpinBox(self.pageSubjectsAndSamples)
+        self.spinBox__dataset_description__Number_of_samples.setObjectName(u"spinBox__dataset_description__Number_of_samples")
+
+        self.gridLayout_6.addWidget(self.spinBox__dataset_description__Number_of_samples, 1, 1, 1, 1)
+
+        self.labelNumberOfSamples = QLabel(self.pageSubjectsAndSamples)
+        self.labelNumberOfSamples.setObjectName(u"labelNumberOfSamples")
+        self.labelNumberOfSamples.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_6.addWidget(self.labelNumberOfSamples, 1, 0, 1, 1)
+
+        self.widgetSpacer_1 = QWidget(self.pageSubjectsAndSamples)
+        self.widgetSpacer_1.setObjectName(u"widgetSpacer_1")
+
+        self.gridLayout_6.addWidget(self.widgetSpacer_1, 2, 0, 1, 1)
+
+        self.stackedWidgetDynamic.addWidget(self.pageSubjectsAndSamples)
+        self.pageScaffoldManifest = QWidget()
+        self.pageScaffoldManifest.setObjectName(u"pageScaffoldManifest")
+        self.gridLayout_7 = QGridLayout(self.pageScaffoldManifest)
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.labelSpecies = QLabel(self.pageScaffoldManifest)
         self.labelSpecies.setObjectName(u"labelSpecies")
         self.labelSpecies.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_3.addWidget(self.labelSpecies, 0, 0, 1, 1)
+        self.gridLayout_7.addWidget(self.labelSpecies, 0, 0, 1, 1)
 
-        self.comboBox__manifest__species = QComboBox(self.groupBoxScaffoldManifest)
+        self.comboBox__manifest__species = QComboBox(self.pageScaffoldManifest)
         self.comboBox__manifest__species.setObjectName(u"comboBox__manifest__species")
         sizePolicy.setHeightForWidth(self.comboBox__manifest__species.sizePolicy().hasHeightForWidth())
         self.comboBox__manifest__species.setSizePolicy(sizePolicy)
         self.comboBox__manifest__species.setMinimumSize(QSize(127, 0))
         self.comboBox__manifest__species.setEditable(True)
 
-        self.gridLayout_3.addWidget(self.comboBox__manifest__species, 0, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.comboBox__manifest__species, 0, 1, 1, 1)
 
-        self.labelOrgan = QLabel(self.groupBoxScaffoldManifest)
+        self.labelOrgan = QLabel(self.pageScaffoldManifest)
         self.labelOrgan.setObjectName(u"labelOrgan")
         self.labelOrgan.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_3.addWidget(self.labelOrgan, 1, 0, 1, 1)
+        self.gridLayout_7.addWidget(self.labelOrgan, 1, 0, 1, 1)
 
-        self.comboBox__manifest__organ = QComboBox(self.groupBoxScaffoldManifest)
+        self.comboBox__manifest__organ = QComboBox(self.pageScaffoldManifest)
         self.comboBox__manifest__organ.setObjectName(u"comboBox__manifest__organ")
         sizePolicy.setHeightForWidth(self.comboBox__manifest__organ.sizePolicy().hasHeightForWidth())
         self.comboBox__manifest__organ.setSizePolicy(sizePolicy)
         self.comboBox__manifest__organ.setMinimumSize(QSize(127, 0))
         self.comboBox__manifest__organ.setEditable(True)
 
-        self.gridLayout_3.addWidget(self.comboBox__manifest__organ, 1, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.comboBox__manifest__organ, 1, 1, 1, 1)
 
-        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.widgetSpacer = QWidget(self.pageScaffoldManifest)
+        self.widgetSpacer.setObjectName(u"widgetSpacer")
 
-        self.gridLayout_3.addItem(self.verticalSpacer_3, 2, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.widgetSpacer, 2, 1, 1, 1)
 
+        self.stackedWidgetDynamic.addWidget(self.pageScaffoldManifest)
 
-        self.verticalLayout_2.addWidget(self.groupBoxScaffoldManifest)
-
-        self.groupBoxParticipantInformation = QGroupBox(GenerateSDSWidget)
-        self.groupBoxParticipantInformation.setObjectName(u"groupBoxParticipantInformation")
-        self.gridLayout_5 = QGridLayout(self.groupBoxParticipantInformation)
-        self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.spinBox__dataset_description__Number_of_subjects = QSpinBox(self.groupBoxParticipantInformation)
-        self.spinBox__dataset_description__Number_of_subjects.setObjectName(u"spinBox__dataset_description__Number_of_subjects")
-
-        self.gridLayout_5.addWidget(self.spinBox__dataset_description__Number_of_subjects, 0, 1, 1, 1)
-
-        self.spinBox__dataset_description__Number_of_samples = QSpinBox(self.groupBoxParticipantInformation)
-        self.spinBox__dataset_description__Number_of_samples.setObjectName(u"spinBox__dataset_description__Number_of_samples")
-
-        self.gridLayout_5.addWidget(self.spinBox__dataset_description__Number_of_samples, 1, 1, 1, 1)
-
-        self.labelNumberOfSamples = QLabel(self.groupBoxParticipantInformation)
-        self.labelNumberOfSamples.setObjectName(u"labelNumberOfSamples")
-        self.labelNumberOfSamples.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_5.addWidget(self.labelNumberOfSamples, 1, 0, 1, 1)
-
-        self.labelNumberOfSubjects = QLabel(self.groupBoxParticipantInformation)
-        self.labelNumberOfSubjects.setObjectName(u"labelNumberOfSubjects")
-        self.labelNumberOfSubjects.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_5.addWidget(self.labelNumberOfSubjects, 0, 0, 1, 1)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.gridLayout_5.addItem(self.verticalSpacer_4, 2, 0, 1, 1)
+        self.verticalLayout_4.addWidget(self.stackedWidgetDynamic)
 
 
-        self.verticalLayout_2.addWidget(self.groupBoxParticipantInformation)
+        self.horizontalLayout_4.addWidget(self.groupBoxDynamic)
 
 
-        self.horizontalLayout_4.addLayout(self.verticalLayout_2)
-
-
-        self.verticalLayout_4.addLayout(self.horizontalLayout_4)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -447,11 +464,11 @@ class Ui_GenerateSDSWidget(object):
         self.horizontalLayout_3.addWidget(self.groupBoxContributorInformation)
 
 
-        self.verticalLayout_4.addLayout(self.horizontalLayout_3)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_3)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.verticalLayout_4.addItem(self.verticalSpacer)
+        self.verticalLayout_2.addItem(self.verticalSpacer)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -465,11 +482,12 @@ class Ui_GenerateSDSWidget(object):
         self.horizontalLayout.addItem(self.horizontalSpacer_2)
 
 
-        self.verticalLayout_4.addLayout(self.horizontalLayout)
+        self.verticalLayout_2.addLayout(self.horizontalLayout)
 
 
         self.retranslateUi(GenerateSDSWidget)
 
+        self.stackedWidgetDynamic.setCurrentIndex(0)
         self.tabWidgetOthers.setCurrentIndex(-1)
         self.tabWidgetContributors.setCurrentIndex(-1)
 
@@ -480,11 +498,12 @@ class Ui_GenerateSDSWidget(object):
     def retranslateUi(self, GenerateSDSWidget):
         GenerateSDSWidget.setWindowTitle(QCoreApplication.translate("GenerateSDSWidget", u"GenerateSDS Widget", None))
         self.groupBoxBasicInformation.setTitle(QCoreApplication.translate("GenerateSDSWidget", u"Basic information", None))
-        self.labelDatasetKeywords.setText(QCoreApplication.translate("GenerateSDSWidget", u"Keywords:  ", None))
-        self.labelDatasetSubtitle.setText(QCoreApplication.translate("GenerateSDSWidget", u"Subtitle:  ", None))
-        self.labelDatasetAcknowledgments.setText(QCoreApplication.translate("GenerateSDSWidget", u"Acknowledgments:  ", None))
         self.labelDatasetTitle.setText(QCoreApplication.translate("GenerateSDSWidget", u"Title:  ", None))
+        self.labelDatasetSubtitle.setText(QCoreApplication.translate("GenerateSDSWidget", u"Subtitle:  ", None))
         self.labelDatasetFunding.setText(QCoreApplication.translate("GenerateSDSWidget", u"Funding:  ", None))
+        self.labelDatasetAcknowledgments.setText(QCoreApplication.translate("GenerateSDSWidget", u"Acknowledgments:  ", None))
+        self.labelDatasetKeywords.setText(QCoreApplication.translate("GenerateSDSWidget", u"Keywords:  ", None))
+        self.pushButtonAddKeyword.setText(QCoreApplication.translate("GenerateSDSWidget", u"Add", None))
         self.groupBoxStudyInformation.setTitle(QCoreApplication.translate("GenerateSDSWidget", u"Study information", None))
         self.labelStudyApproach.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study approach:", None))
         self.labelStudyOrganSystem.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study organ system:", None))
@@ -493,12 +512,11 @@ class Ui_GenerateSDSWidget(object):
         self.labelStudyPrimaryConclusion.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study primary conclusion:", None))
         self.labelStudyCollectionTitle.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study collection title:", None))
         self.labelStudyDataCollection.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study data collection:", None))
-        self.groupBoxScaffoldManifest.setTitle(QCoreApplication.translate("GenerateSDSWidget", u"Scaffold manifest", None))
+        self.groupBoxDynamic.setTitle(QCoreApplication.translate("GenerateSDSWidget", u"Dynamic Group Box", None))
+        self.labelNumberOfSubjects.setText(QCoreApplication.translate("GenerateSDSWidget", u"Number of subjects:", None))
+        self.labelNumberOfSamples.setText(QCoreApplication.translate("GenerateSDSWidget", u"Number of samples:", None))
         self.labelSpecies.setText(QCoreApplication.translate("GenerateSDSWidget", u"Species:  ", None))
         self.labelOrgan.setText(QCoreApplication.translate("GenerateSDSWidget", u"Organ:  ", None))
-        self.groupBoxParticipantInformation.setTitle(QCoreApplication.translate("GenerateSDSWidget", u"Participant information", None))
-        self.labelNumberOfSamples.setText(QCoreApplication.translate("GenerateSDSWidget", u"Number of samples:", None))
-        self.labelNumberOfSubjects.setText(QCoreApplication.translate("GenerateSDSWidget", u"Number of subjects:", None))
         self.groupBoxSubmissionInformation.setTitle(QCoreApplication.translate("GenerateSDSWidget", u"Submission information", None))
         self.labelConsortiumDataStandard.setText(QCoreApplication.translate("GenerateSDSWidget", u"Consortium data standard:", None))
         self.labelFundingConsortium.setText(QCoreApplication.translate("GenerateSDSWidget", u"Funding consortium:", None))
