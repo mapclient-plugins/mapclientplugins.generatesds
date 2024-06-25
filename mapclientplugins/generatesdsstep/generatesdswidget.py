@@ -39,6 +39,19 @@ def _flatten(xss):
     return [x for xs in xss for x in xs]
 
 
+def _populate_chip_layout(layout):
+    chip_layout = []
+    for row in range(layout.rowCount()):
+        if layout.columnCount():
+            chip_layout.append([])
+        for column in range(layout.columnCount()):
+            item = layout.itemAtPosition(row, column)
+            if item:
+                chip_layout[row].append(item.widget())
+
+    return chip_layout
+
+
 class GenerateSDSWidget(QtWidgets.QWidget):
 
     def __init__(self, dataset_loc, dataset_type, parent=None):
@@ -51,7 +64,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui.pushButtonAddKeyword.setEnabled(False)
         self._keywords_layout = QtWidgets.QGridLayout()
         self._ui.widgetForChips__dataset_description__Keywords.setLayout(self._keywords_layout)
-        self._keyword_chips = [[]]
+        self._keyword_chips = []
         self._add_contributor_information_tab(load_database_info=False)
         self._add_other_information_tab(load_database_info=False)
 
@@ -82,12 +95,13 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
     def _remove_keyword(self):
         sender = self.sender()
-        senders = _flatten(self._keyword_chips)
+        chip_layout = _populate_chip_layout(self._ui.widgetForChips__dataset_description__Keywords.layout())
+        senders = _flatten(chip_layout)
         index = senders.index(sender)
         del senders[index]
 
         texts = [t.tabText(0) for t in senders]
-        self._keyword_chips = [[]]
+        self._keyword_chips = []
 
         item = self._keywords_layout.takeAt(0)
         while item:
@@ -97,7 +111,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             item = self._keywords_layout.takeAt(0)
 
         for text in texts:
-            self._add_keyword(text)
+            self._add_keyword(text, self._ui.widgetForChips__dataset_description__Keywords)
 
     def _create_chip(self, text):
         tabbar = QtWidgets.QTabBar()
@@ -106,24 +120,25 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         tabbar.addTab(text)
         return tabbar
 
-    def _determine_chip_row_column(self, chip):
+    def _determine_chip_row_column(self, chip, widget):
         layout_column_count = []
         layout_max_width = []
-        for layout_row in self._keyword_chips:
+        chip_layout = _populate_chip_layout(widget.layout())
+        for layout_row in chip_layout:
             layout_column_count.append(len(layout_row))
             layout_max_width.append([])
             for existing_chip in layout_row:
                 layout_max_width[-1].append(existing_chip.sizeHint().width())
 
-        max_columns = max(layout_column_count)
+        cur_width = chip.sizeHint().width()
+
+        max_columns = max(layout_column_count) if len(layout_column_count) else 0
         max_entry_width = [0] * max_columns
         for i in layout_max_width:
             for index, j in enumerate(i):
                 max_entry_width[index] = j if j > max_entry_width[index] else max_entry_width[index]
 
-        cur_width = chip.sizeHint().width()
-
-        row_chips = self._keyword_chips[-1]
+        row_chips = chip_layout[-1]
         if len(row_chips) < len(max_entry_width):
             max_entry_width[len(row_chips)] = cur_width
         else:
@@ -131,21 +146,22 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
         proposed_width = sum(max_entry_width)
         spacing = 12 * len(max_entry_width) + 12
-        if proposed_width + spacing > self._ui.widgetForChips__dataset_description__Keywords.size().width():
-            self._keyword_chips.append([])
 
-        last_row = self._keyword_chips[-1]
+        if proposed_width + spacing > widget.size().width():
+            chip_layout.append([])
+
+        last_row = chip_layout[-1]
         last_row.append(chip)
 
-        row = len(self._keyword_chips) - 1
-        return row, len(self._keyword_chips[row]) - 1
+        row = len(chip_layout) - 1
+        return row, len(chip_layout[row]) - 1
 
     def _add_keyword_clicked(self):
-        self._add_keyword(self._ui.ignoreComboBox__dataset_description__Keywords.currentText())
+        self._add_keyword(self._ui.ignoreComboBox__dataset_description__Keywords.currentText(), self._ui.widgetForChips__dataset_description__Keywords)
 
-    def _add_keyword(self, text):
+    def _add_keyword(self, text, widget):
         chip = self._create_chip(text)
-        row, column = self._determine_chip_row_column(chip)
+        row, column = self._determine_chip_row_column(chip, widget)
         self._keywords_layout.addWidget(chip, row, column, QtCore.Qt.AlignmentFlag.AlignHCenter)
 
     def _load_database(self):
@@ -214,7 +230,11 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             try:
                 file_source, file_row, file_column = _determine_destination(attr, index)
                 value = self._read_value_from_file(file_source, file_row, file_column)
-                self._add_keyword(value)
+                if value:
+                    self._add_keyword(value, widget)
+                    index += 1
+                else:
+                    index = 0
             except KeyError:
                 index = 0
 
