@@ -100,6 +100,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui.groupBoxDynamic.setTitle("Scaffold manifest" if dataset_type == "Scaffold" else "Subjects and Samples")
         self._ui.pushButtonAddKeyword.setEnabled(False)
         self._ui.widgetForChips__dataset_description__Keywords.setLayout(QtWidgets.QGridLayout())
+        self._ui.widgetForChips__dataset_description__Study_technique.setLayout(QtWidgets.QGridLayout())
         self._keyword_chips = []
         self._add_contributor_information_tab(load_database_info=False)
         self._add_other_information_tab(load_database_info=False)
@@ -124,10 +125,15 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui.pushButtonAddOther.clicked.connect(self._add_other_information_tab)
         self._ui.pushButtonRemoveOther.clicked.connect(self._remove_other_information_tab)
         self._ui.databaseOnlyComboBox__dataset_description__Keywords.editTextChanged.connect(self._keywords_text_changed)
+        self._ui.databaseOnlyComboBox__dataset_description__Study_technique.editTextChanged.connect(self._study_technique_text_changed)
         self._ui.pushButtonAddKeyword.clicked.connect(self._add_keyword_clicked)
+        self._ui.pushButtonAddStudy_technique.clicked.connect(self._add_study_technique_clicked)
 
     def _keywords_text_changed(self, text):
         self._ui.pushButtonAddKeyword.setEnabled(text != '')
+
+    def _study_technique_text_changed(self, text):
+        self._ui.pushButtonAddStudy_technique.setEnabled(text != '')
 
     def _remove_chip_clicked(self):
         sender = self.sender()
@@ -148,7 +154,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             item = layout.takeAt(0)
 
         for text in texts:
-            self._add_keyword(text, widget)
+            self._add_chip(text, widget)
 
     def _create_chip(self, text):
         tabbar = QtWidgets.QTabBar()
@@ -157,10 +163,13 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         tabbar.addTab(text)
         return tabbar
 
-    def _add_keyword_clicked(self):
-        self._add_keyword(self._ui.databaseOnlyComboBox__dataset_description__Keywords.currentText(), self._ui.widgetForChips__dataset_description__Keywords)
+    def _add_study_technique_clicked(self):
+        self._add_chip(self._ui.databaseOnlyComboBox__dataset_description__Study_technique.currentText(), self._ui.widgetForChips__dataset_description__Study_technique)
 
-    def _add_keyword(self, text, widget):
+    def _add_keyword_clicked(self):
+        self._add_chip(self._ui.databaseOnlyComboBox__dataset_description__Keywords.currentText(), self._ui.widgetForChips__dataset_description__Keywords)
+
+    def _add_chip(self, text, widget):
         chip = self._create_chip(text)
         row, column = _determine_chip_row_column(chip, widget)
         widget.layout().addWidget(chip, row, column, QtCore.Qt.AlignmentFlag.AlignHCenter)
@@ -195,6 +204,9 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
         self._ui.databaseOnlyComboBox__dataset_description__Keywords.insertItem(0, "")
         self._ui.databaseOnlyComboBox__dataset_description__Keywords.setCurrentIndex(0)
+
+        self._ui.databaseOnlyComboBox__dataset_description__Study_technique.insertItem(0, "")
+        self._ui.databaseOnlyComboBox__dataset_description__Study_technique.setCurrentIndex(0)
 
     def _save_value_to_file(self, file_destination, file_row, file_column, value):
         df = pd.read_excel(os.path.join(self._dataset_loc, file_destination), index_col=0, dtype=str).fillna("")
@@ -239,7 +251,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                 file_source, file_row, file_column = _determine_location(attr, index)
                 value = self._read_value_from_file(file_source, file_row, file_column)
                 if value:
-                    self._add_keyword(value, widget)
+                    self._add_chip(value, widget)
                     index += 1
                 else:
                     index = 0

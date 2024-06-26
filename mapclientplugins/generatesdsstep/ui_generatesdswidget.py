@@ -133,29 +133,42 @@ class Ui_GenerateSDSWidget(object):
         self.groupBoxStudyInformation.setObjectName(u"groupBoxStudyInformation")
         self.gridLayout_2 = QGridLayout(self.groupBoxStudyInformation)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.comboBox__dataset_description__Study_collection_title = QComboBox(self.groupBoxStudyInformation)
-        self.comboBox__dataset_description__Study_collection_title.setObjectName(u"comboBox__dataset_description__Study_collection_title")
-        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_collection_title.sizePolicy().hasHeightForWidth())
-        self.comboBox__dataset_description__Study_collection_title.setSizePolicy(sizePolicy)
-        self.comboBox__dataset_description__Study_collection_title.setMinimumSize(QSize(127, 0))
-        self.comboBox__dataset_description__Study_collection_title.setEditable(True)
+        self.labelStudyPurpose = QLabel(self.groupBoxStudyInformation)
+        self.labelStudyPurpose.setObjectName(u"labelStudyPurpose")
+        self.labelStudyPurpose.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_2.addWidget(self.comboBox__dataset_description__Study_collection_title, 6, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.labelStudyPurpose, 0, 0, 1, 1)
 
-        self.labelStudyApproach = QLabel(self.groupBoxStudyInformation)
-        self.labelStudyApproach.setObjectName(u"labelStudyApproach")
-        self.labelStudyApproach.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.comboBox__dataset_description__Study_purpose = QComboBox(self.groupBoxStudyInformation)
+        self.comboBox__dataset_description__Study_purpose.setObjectName(u"comboBox__dataset_description__Study_purpose")
+        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_purpose.sizePolicy().hasHeightForWidth())
+        self.comboBox__dataset_description__Study_purpose.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Study_purpose.setMinimumSize(QSize(127, 0))
+        self.comboBox__dataset_description__Study_purpose.setEditable(True)
 
-        self.gridLayout_2.addWidget(self.labelStudyApproach, 4, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.comboBox__dataset_description__Study_purpose, 0, 1, 1, 1)
 
-        self.comboBox__dataset_description__Study_approach = QComboBox(self.groupBoxStudyInformation)
-        self.comboBox__dataset_description__Study_approach.setObjectName(u"comboBox__dataset_description__Study_approach")
-        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_approach.sizePolicy().hasHeightForWidth())
-        self.comboBox__dataset_description__Study_approach.setSizePolicy(sizePolicy)
-        self.comboBox__dataset_description__Study_approach.setMinimumSize(QSize(127, 0))
-        self.comboBox__dataset_description__Study_approach.setEditable(True)
+        self.labelStudyDataCollection = QLabel(self.groupBoxStudyInformation)
+        self.labelStudyDataCollection.setObjectName(u"labelStudyDataCollection")
+        self.labelStudyDataCollection.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTop|Qt.AlignmentFlag.AlignTrailing)
 
-        self.gridLayout_2.addWidget(self.comboBox__dataset_description__Study_approach, 4, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.labelStudyDataCollection, 1, 0, 1, 1)
+
+        self.plainTextEdit__dataset_description__Study_data_collection = QPlainTextEdit(self.groupBoxStudyInformation)
+        self.plainTextEdit__dataset_description__Study_data_collection.setObjectName(u"plainTextEdit__dataset_description__Study_data_collection")
+
+        self.gridLayout_2.addWidget(self.plainTextEdit__dataset_description__Study_data_collection, 1, 1, 1, 1)
+
+        self.labelStudyPrimaryConclusion = QLabel(self.groupBoxStudyInformation)
+        self.labelStudyPrimaryConclusion.setObjectName(u"labelStudyPrimaryConclusion")
+        self.labelStudyPrimaryConclusion.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTop|Qt.AlignmentFlag.AlignTrailing)
+
+        self.gridLayout_2.addWidget(self.labelStudyPrimaryConclusion, 2, 0, 1, 1)
+
+        self.plainTextEdit__dataset_description__Study_primary_conclusion = QPlainTextEdit(self.groupBoxStudyInformation)
+        self.plainTextEdit__dataset_description__Study_primary_conclusion.setObjectName(u"plainTextEdit__dataset_description__Study_primary_conclusion")
+
+        self.gridLayout_2.addWidget(self.plainTextEdit__dataset_description__Study_primary_conclusion, 2, 1, 1, 1)
 
         self.labelStudyOrganSystem = QLabel(self.groupBoxStudyInformation)
         self.labelStudyOrganSystem.setObjectName(u"labelStudyOrganSystem")
@@ -172,63 +185,65 @@ class Ui_GenerateSDSWidget(object):
 
         self.gridLayout_2.addWidget(self.comboBox__dataset_description__Study_organ_system, 3, 1, 1, 1)
 
-        self.labelStudyTechnique = QLabel(self.groupBoxStudyInformation)
-        self.labelStudyTechnique.setObjectName(u"labelStudyTechnique")
-        self.labelStudyTechnique.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.labelStudyApproach = QLabel(self.groupBoxStudyInformation)
+        self.labelStudyApproach.setObjectName(u"labelStudyApproach")
+        self.labelStudyApproach.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_2.addWidget(self.labelStudyTechnique, 5, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.labelStudyApproach, 4, 0, 1, 1)
 
-        self.labelStudyPurpose = QLabel(self.groupBoxStudyInformation)
-        self.labelStudyPurpose.setObjectName(u"labelStudyPurpose")
-        self.labelStudyPurpose.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.comboBox__dataset_description__Study_approach = QComboBox(self.groupBoxStudyInformation)
+        self.comboBox__dataset_description__Study_approach.setObjectName(u"comboBox__dataset_description__Study_approach")
+        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_approach.sizePolicy().hasHeightForWidth())
+        self.comboBox__dataset_description__Study_approach.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Study_approach.setMinimumSize(QSize(127, 0))
+        self.comboBox__dataset_description__Study_approach.setEditable(True)
 
-        self.gridLayout_2.addWidget(self.labelStudyPurpose, 0, 0, 1, 1)
-
-        self.labelStudyPrimaryConclusion = QLabel(self.groupBoxStudyInformation)
-        self.labelStudyPrimaryConclusion.setObjectName(u"labelStudyPrimaryConclusion")
-        self.labelStudyPrimaryConclusion.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTop|Qt.AlignmentFlag.AlignTrailing)
-
-        self.gridLayout_2.addWidget(self.labelStudyPrimaryConclusion, 2, 0, 1, 1)
-
-        self.plainTextEdit__dataset_description__Study_primary_conclusion = QPlainTextEdit(self.groupBoxStudyInformation)
-        self.plainTextEdit__dataset_description__Study_primary_conclusion.setObjectName(u"plainTextEdit__dataset_description__Study_primary_conclusion")
-
-        self.gridLayout_2.addWidget(self.plainTextEdit__dataset_description__Study_primary_conclusion, 2, 1, 1, 1)
-
-        self.plainTextEdit__dataset_description__Study_data_collection = QPlainTextEdit(self.groupBoxStudyInformation)
-        self.plainTextEdit__dataset_description__Study_data_collection.setObjectName(u"plainTextEdit__dataset_description__Study_data_collection")
-
-        self.gridLayout_2.addWidget(self.plainTextEdit__dataset_description__Study_data_collection, 1, 1, 1, 1)
-
-        self.comboBox__dataset_description__Study_purpose = QComboBox(self.groupBoxStudyInformation)
-        self.comboBox__dataset_description__Study_purpose.setObjectName(u"comboBox__dataset_description__Study_purpose")
-        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_purpose.sizePolicy().hasHeightForWidth())
-        self.comboBox__dataset_description__Study_purpose.setSizePolicy(sizePolicy)
-        self.comboBox__dataset_description__Study_purpose.setMinimumSize(QSize(127, 0))
-        self.comboBox__dataset_description__Study_purpose.setEditable(True)
-
-        self.gridLayout_2.addWidget(self.comboBox__dataset_description__Study_purpose, 0, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.comboBox__dataset_description__Study_approach, 4, 1, 1, 1)
 
         self.labelStudyCollectionTitle = QLabel(self.groupBoxStudyInformation)
         self.labelStudyCollectionTitle.setObjectName(u"labelStudyCollectionTitle")
         self.labelStudyCollectionTitle.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_2.addWidget(self.labelStudyCollectionTitle, 6, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.labelStudyCollectionTitle, 5, 0, 1, 1)
 
-        self.comboBox__dataset_description__Study_technique = QComboBox(self.groupBoxStudyInformation)
-        self.comboBox__dataset_description__Study_technique.setObjectName(u"comboBox__dataset_description__Study_technique")
-        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_technique.sizePolicy().hasHeightForWidth())
-        self.comboBox__dataset_description__Study_technique.setSizePolicy(sizePolicy)
-        self.comboBox__dataset_description__Study_technique.setMinimumSize(QSize(127, 0))
-        self.comboBox__dataset_description__Study_technique.setEditable(True)
+        self.comboBox__dataset_description__Study_collection_title = QComboBox(self.groupBoxStudyInformation)
+        self.comboBox__dataset_description__Study_collection_title.setObjectName(u"comboBox__dataset_description__Study_collection_title")
+        sizePolicy.setHeightForWidth(self.comboBox__dataset_description__Study_collection_title.sizePolicy().hasHeightForWidth())
+        self.comboBox__dataset_description__Study_collection_title.setSizePolicy(sizePolicy)
+        self.comboBox__dataset_description__Study_collection_title.setMinimumSize(QSize(127, 0))
+        self.comboBox__dataset_description__Study_collection_title.setEditable(True)
 
-        self.gridLayout_2.addWidget(self.comboBox__dataset_description__Study_technique, 5, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.comboBox__dataset_description__Study_collection_title, 5, 1, 1, 1)
 
-        self.labelStudyDataCollection = QLabel(self.groupBoxStudyInformation)
-        self.labelStudyDataCollection.setObjectName(u"labelStudyDataCollection")
-        self.labelStudyDataCollection.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTop|Qt.AlignmentFlag.AlignTrailing)
+        self.labelStudyTechnique = QLabel(self.groupBoxStudyInformation)
+        self.labelStudyTechnique.setObjectName(u"labelStudyTechnique")
+        self.labelStudyTechnique.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_2.addWidget(self.labelStudyDataCollection, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.labelStudyTechnique, 6, 0, 1, 1)
+
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.databaseOnlyComboBox__dataset_description__Study_technique = QComboBox(self.groupBoxStudyInformation)
+        self.databaseOnlyComboBox__dataset_description__Study_technique.setObjectName(u"databaseOnlyComboBox__dataset_description__Study_technique")
+        sizePolicy.setHeightForWidth(self.databaseOnlyComboBox__dataset_description__Study_technique.sizePolicy().hasHeightForWidth())
+        self.databaseOnlyComboBox__dataset_description__Study_technique.setSizePolicy(sizePolicy)
+        self.databaseOnlyComboBox__dataset_description__Study_technique.setMinimumSize(QSize(127, 0))
+        self.databaseOnlyComboBox__dataset_description__Study_technique.setEditable(True)
+
+        self.horizontalLayout_7.addWidget(self.databaseOnlyComboBox__dataset_description__Study_technique)
+
+        self.pushButtonAddStudy_technique = QPushButton(self.groupBoxStudyInformation)
+        self.pushButtonAddStudy_technique.setObjectName(u"pushButtonAddStudy_technique")
+
+        self.horizontalLayout_7.addWidget(self.pushButtonAddStudy_technique)
+
+
+        self.gridLayout_2.addLayout(self.horizontalLayout_7, 6, 1, 1, 1)
+
+        self.widgetForChips__dataset_description__Study_technique = QWidget(self.groupBoxStudyInformation)
+        self.widgetForChips__dataset_description__Study_technique.setObjectName(u"widgetForChips__dataset_description__Study_technique")
+
+        self.gridLayout_2.addWidget(self.widgetForChips__dataset_description__Study_technique, 7, 1, 1, 1)
 
 
         self.horizontalLayout_4.addWidget(self.groupBoxStudyInformation)
@@ -505,13 +520,14 @@ class Ui_GenerateSDSWidget(object):
         self.labelDatasetKeywords.setText(QCoreApplication.translate("GenerateSDSWidget", u"Keywords:  ", None))
         self.pushButtonAddKeyword.setText(QCoreApplication.translate("GenerateSDSWidget", u"Add", None))
         self.groupBoxStudyInformation.setTitle(QCoreApplication.translate("GenerateSDSWidget", u"Study information", None))
-        self.labelStudyApproach.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study approach:", None))
-        self.labelStudyOrganSystem.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study organ system:", None))
-        self.labelStudyTechnique.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study technique:", None))
         self.labelStudyPurpose.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study purpose:", None))
-        self.labelStudyPrimaryConclusion.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study primary conclusion:", None))
-        self.labelStudyCollectionTitle.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study collection title:", None))
         self.labelStudyDataCollection.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study data collection:", None))
+        self.labelStudyPrimaryConclusion.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study primary conclusion:", None))
+        self.labelStudyOrganSystem.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study organ system:", None))
+        self.labelStudyApproach.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study approach:", None))
+        self.labelStudyCollectionTitle.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study collection title:", None))
+        self.labelStudyTechnique.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study technique:", None))
+        self.pushButtonAddStudy_technique.setText(QCoreApplication.translate("GenerateSDSWidget", u"Add", None))
         self.groupBoxDynamic.setTitle(QCoreApplication.translate("GenerateSDSWidget", u"Dynamic Group Box", None))
         self.labelNumberOfSubjects.setText(QCoreApplication.translate("GenerateSDSWidget", u"Number of subjects:", None))
         self.labelNumberOfSamples.setText(QCoreApplication.translate("GenerateSDSWidget", u"Number of samples:", None))
