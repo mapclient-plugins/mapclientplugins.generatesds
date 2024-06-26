@@ -308,11 +308,11 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                 if value:
                     index += 1
                 else:
-                    return index
+                    return index - 1
             except KeyError:
-                return index
+                return index - 1
 
-        return index
+        return index - 1
 
     def _load_information(self):
         self._create_manifest()
