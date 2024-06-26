@@ -2,13 +2,15 @@ import json
 import logging
 
 import os.path
+
 import pandas as pd
 
 from PySide6 import QtCore, QtWidgets
 from filelock import FileLock, Timeout
+
 from mapclient.settings.general import get_data_directory
 from mapclientplugins.generatesdsstep.contributorinformationwidget import ContributorInformationWidget
-from mapclientplugins.generatesdsstep.definitions import GENERATE_SDS_DATABASE_FILENAME, SCAFFOLD_INFO_FILE
+from mapclientplugins.generatesdsstep.definitions import GENERATE_SDS_DATABASE_FILENAME, SCAFFOLD_INFO_FILE, ARGON_DOCUMENT_MIME_TYPE, SCAFFOLD_SETTINGS_MIME_TYPE
 from mapclientplugins.generatesdsstep.otherrinformationwidget import OtherInformationWidget
 from mapclientplugins.generatesdsstep.ui_generatesdswidget import Ui_GenerateSDSWidget
 
@@ -87,6 +89,50 @@ def _widget_chip_texts(widget):
     chip_layout = _populate_chip_layout(layout)
     chips = _flatten(chip_layout)
     return [chip.tabText(0) for chip in chips]
+
+
+def _is_small_json_file(filename):
+    file_stats = os.stat(filename)
+    if file_stats.st_size > 2 * 1024 * 1024:
+        return False
+
+    if not os.path.isfile(filename):
+        return False
+
+    try:
+        with open(filename, 'r') as f:
+            state = f.read()
+    except UnicodeDecodeError:
+        return False
+
+    try:
+        d = json.loads(state)
+    except json.JSONDecodeError:
+        return False
+
+    return True
+
+
+def _find_files_of_interest(location):
+    only_files = [os.path.join(dp, f) for dp, dn, filenames in os.walk(location) for f in filenames]
+    files_of_interest = {}
+    for f in only_files:
+        if _is_small_json_file(f):
+            with open(f) as fh:
+                content = json.load(fh)
+
+            if "scaffold_settings" in content:
+                if SCAFFOLD_SETTINGS_MIME_TYPE not in files_of_interest:
+                    files_of_interest[SCAFFOLD_SETTINGS_MIME_TYPE] = []
+
+                files_of_interest[SCAFFOLD_SETTINGS_MIME_TYPE].append(f)
+            elif "CMLibs Argon Version" in content:
+                if ARGON_DOCUMENT_MIME_TYPE not in files_of_interest:
+                    files_of_interest[ARGON_DOCUMENT_MIME_TYPE] = []
+
+                files_of_interest[ARGON_DOCUMENT_MIME_TYPE].append(f)
+
+    return files_of_interest
 
 
 class GenerateSDSWidget(QtWidgets.QWidget):
@@ -495,18 +541,31 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         if not os.path.exists(manifest_file):
             default_header = ["filename", "timestamp", "description", "file type", "additional types", "species", "organ"]
             if self._dataset_type == "Scaffold":
-                default_data = [SCAFFOLD_INFO_FILE, "", "Information on the organ scaffold in JSON format.", "json", "application/x.vnd.abi.organ-scaffold-info+json", "", ""]
+                default_data = [[SCAFFOLD_INFO_FILE, "", "Information on the organ scaffold in JSON format.", "json", "application/x.vnd.abi.organ-scaffold-info+json", "", ""]]
             else:
-                default_data = [""] * len(default_header)
+                default_data = [[""] * len(default_header)]
 
-            df = pd.DataFrame([default_data], columns=default_header)
+            df = pd.DataFrame(default_data, columns=default_header)
             df.to_excel(manifest_file, index=False)
+
+    def _annotate_misc(self):
+        if self._dataset_type == "Scaffold":
+            primary_manifest_location = os.path.join(self._dataset_loc, "primary")
+            files_of_interest = _find_files_of_interest(primary_manifest_location)
+            for key, values in files_of_interest.items():
+                for value in values:
+                    row = os.path.relpath(value, primary_manifest_location)
+                    self._save_value_to_file(os.path.join("primary", "manifest.xlsx"), row, "additional types", key)
+                    self._save_value_to_file(os.path.join("primary", "manifest.xlsx"), row, "file type", "json")
+                    self._save_value_to_file(os.path.join("primary", "manifest.xlsx"), row, "species", self._ui.comboBox__manifest__species.currentText())
+                    self._save_value_to_file(os.path.join("primary", "manifest.xlsx"), row, "organ", self._ui.comboBox__manifest__organ.currentText())
 
     def register_done_execution(self, callback):
         self._callback = callback
 
     def _done_button_clicked(self):
         self._save_information()
+        self._annotate_misc()
         self._update_database()
 
         self._callback()
