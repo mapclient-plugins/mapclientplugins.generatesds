@@ -104,14 +104,14 @@ class Ui_GenerateSDSWidget(object):
 
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.ignoreComboBox__dataset_description__Keywords = QComboBox(self.groupBoxBasicInformation)
-        self.ignoreComboBox__dataset_description__Keywords.setObjectName(u"ignoreComboBox__dataset_description__Keywords")
-        sizePolicy.setHeightForWidth(self.ignoreComboBox__dataset_description__Keywords.sizePolicy().hasHeightForWidth())
-        self.ignoreComboBox__dataset_description__Keywords.setSizePolicy(sizePolicy)
-        self.ignoreComboBox__dataset_description__Keywords.setMinimumSize(QSize(127, 0))
-        self.ignoreComboBox__dataset_description__Keywords.setEditable(True)
+        self.databaseOnlyComboBox__dataset_description__Keywords = QComboBox(self.groupBoxBasicInformation)
+        self.databaseOnlyComboBox__dataset_description__Keywords.setObjectName(u"databaseOnlyComboBox__dataset_description__Keywords")
+        sizePolicy.setHeightForWidth(self.databaseOnlyComboBox__dataset_description__Keywords.sizePolicy().hasHeightForWidth())
+        self.databaseOnlyComboBox__dataset_description__Keywords.setSizePolicy(sizePolicy)
+        self.databaseOnlyComboBox__dataset_description__Keywords.setMinimumSize(QSize(127, 0))
+        self.databaseOnlyComboBox__dataset_description__Keywords.setEditable(True)
 
-        self.horizontalLayout_6.addWidget(self.ignoreComboBox__dataset_description__Keywords)
+        self.horizontalLayout_6.addWidget(self.databaseOnlyComboBox__dataset_description__Keywords)
 
         self.pushButtonAddKeyword = QPushButton(self.groupBoxBasicInformation)
         self.pushButtonAddKeyword.setObjectName(u"pushButtonAddKeyword")

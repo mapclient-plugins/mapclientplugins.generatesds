@@ -151,7 +151,7 @@
         <item row="4" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
-           <widget class="QComboBox" name="ignoreComboBox__dataset_description__Keywords">
+           <widget class="QComboBox" name="databaseOnlyComboBox__dataset_description__Keywords">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>

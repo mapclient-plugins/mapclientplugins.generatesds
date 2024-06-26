@@ -19,13 +19,6 @@ def _determine_location(text, index):
     parts = text.split("__")
     column = "Value" if index == 1 else f"Value {index}"
     row = " ".join(parts[2].split("_"))
-    if "keyword" in text:
-        print('----------------')
-        print(text)
-        print(parts)
-        print(index)
-        print(column)
-        print(row)
     if parts[1] == "manifest":
         parts[1] = os.path.join("primary", "manifest")
         column = row
@@ -89,6 +82,13 @@ def _determine_chip_row_column(chip, widget):
     return row, len(chip_layout[row]) - 1
 
 
+def _widget_chip_texts(widget):
+    layout = widget.layout()
+    chip_layout = _populate_chip_layout(layout)
+    chips = _flatten(chip_layout)
+    return [chip.tabText(0) for chip in chips]
+
+
 class GenerateSDSWidget(QtWidgets.QWidget):
 
     def __init__(self, dataset_loc, dataset_type, parent=None):
@@ -123,7 +123,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui.pushButtonRemoveContributor.clicked.connect(self._remove_contributor_information_tab)
         self._ui.pushButtonAddOther.clicked.connect(self._add_other_information_tab)
         self._ui.pushButtonRemoveOther.clicked.connect(self._remove_other_information_tab)
-        self._ui.ignoreComboBox__dataset_description__Keywords.editTextChanged.connect(self._keywords_text_changed)
+        self._ui.databaseOnlyComboBox__dataset_description__Keywords.editTextChanged.connect(self._keywords_text_changed)
         self._ui.pushButtonAddKeyword.clicked.connect(self._add_keyword_clicked)
 
     def _keywords_text_changed(self, text):
@@ -158,7 +158,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         return tabbar
 
     def _add_keyword_clicked(self):
-        self._add_keyword(self._ui.ignoreComboBox__dataset_description__Keywords.currentText(), self._ui.widgetForChips__dataset_description__Keywords)
+        self._add_keyword(self._ui.databaseOnlyComboBox__dataset_description__Keywords.currentText(), self._ui.widgetForChips__dataset_description__Keywords)
 
     def _add_keyword(self, text, widget):
         chip = self._create_chip(text)
@@ -189,10 +189,12 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             if attr not in skipped_attr:
                 element = getattr(self._ui, attr, None)
                 if element:
-                    print(attr, self._database[attr])
                     for item in self._database[attr]:
                         if element.findText(item) == -1:
                             element.addItem(item)
+
+        self._ui.databaseOnlyComboBox__dataset_description__Keywords.insertItem(0, "")
+        self._ui.databaseOnlyComboBox__dataset_description__Keywords.setCurrentIndex(0)
 
     def _save_value_to_file(self, file_destination, file_row, file_column, value):
         df = pd.read_excel(os.path.join(self._dataset_loc, file_destination), index_col=0, dtype=str).fillna("")
@@ -213,10 +215,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
     def _save_chips_to_file(self, owner, attr):
         widget = getattr(owner, attr)
         entry_count = self._determine_entry_count(attr)
-        layout = widget.layout()
-        chip_layout = _populate_chip_layout(layout)
-        chips = _flatten(chip_layout)
-        texts = [chip.tabText(0) for chip in chips]
+        texts = _widget_chip_texts(widget)
         for index, text in enumerate(texts):
             file_destination, file_row, file_column = _determine_location(attr, index + 1)
             self._save_value_to_file(file_destination, file_row, file_column, text)
@@ -416,12 +415,21 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                     other_information[key].append(other_info[key])
 
         for attr in dir(self._ui):
+            values = None
             if attr.startswith("comboBox"):
                 values = self._database.get(attr, [])
                 element = getattr(self._ui, attr)
                 if element.currentText() not in values:
                     values.append(element.currentText())
 
+            if attr.startswith("databaseOnlyComboBox"):
+                values = self._database.get(attr, [])
+                buddy_attr = attr.replace("databaseOnlyComboBox", "widgetForChips")
+                widget = getattr(self._ui, buddy_attr)
+                texts = _widget_chip_texts(widget)
+                values = list(set(texts + values))
+
+            if values:
                 self._database[attr] = values
 
         try:
