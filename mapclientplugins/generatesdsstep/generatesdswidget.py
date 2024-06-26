@@ -209,8 +209,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui.databaseOnlyComboBox__dataset_description__Study_technique.setCurrentIndex(0)
 
     def _save_value_to_file(self, file_destination, file_row, file_column, value):
-        df = pd.read_excel(os.path.join(self._dataset_loc, file_destination), index_col=0, dtype=str).fillna("")
-        df.at[file_row, file_column] = value
+        df = pd.read_excel(os.path.join(self._dataset_loc, file_destination), index_col=0).fillna("")
+        df.at[file_row, file_column] = int(value) if f"{value}".isdigit() else value
         df.to_excel(os.path.join(self._dataset_loc, file_destination))
 
     def _read_value_from_file(self, file_source, file_row, file_column):
