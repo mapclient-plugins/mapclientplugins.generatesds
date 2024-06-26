@@ -337,8 +337,11 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                 if attr.startswith("comboBox"):
                     self._load_widget_info_from_file(widget.ui_owner(), attr, "addItem", index + 1)
 
+    def _dataset_description_dataset_type(self):
+        return "computational" if self._dataset_type == "Scaffold" else self._dataset_type
+
     def _save_information(self):
-        self._save_value_to_file("dataset_description.xlsx", "Type", "Value", self._dataset_type)
+        self._save_value_to_file("dataset_description.xlsx", "Type", "Value", self._dataset_description_dataset_type())
 
         for attr in dir(self._ui):
             if attr.startswith("comboBox"):
