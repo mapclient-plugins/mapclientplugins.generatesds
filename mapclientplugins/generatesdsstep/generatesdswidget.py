@@ -15,7 +15,7 @@ from mapclientplugins.generatesdsstep.ui_generatesdswidget import Ui_GenerateSDS
 logger = logging.getLogger(__name__)
 
 
-def _determine_destination(text, index):
+def _determine_location(text, index):
     parts = text.split("__")
     column = "Value" if index == 1 else f"Value {index}"
     row = " ".join(parts[2].split("_"))
@@ -131,11 +131,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
     def _remove_chip_clicked(self):
         sender = self.sender()
-        parent = sender.parentWidget()
-        self._remove_chip(parent)
-
-    def _remove_chip(self, widget):
-        sender = self.sender()
+        widget = sender.parentWidget()
         layout = widget.layout()
         chip_layout = _populate_chip_layout(layout)
         senders = _flatten(chip_layout)
@@ -193,6 +189,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             if attr not in skipped_attr:
                 element = getattr(self._ui, attr, None)
                 if element:
+                    print(attr, self._database[attr])
                     for item in self._database[attr]:
                         if element.findText(item) == -1:
                             element.addItem(item)
@@ -208,22 +205,29 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
     def _save_widget_info_to_file(self, owner, attr, method, index=1):
         widget = getattr(owner, attr)
-        file_destination, file_row, file_column = _determine_destination(attr, index)
+        file_destination, file_row, file_column = _determine_location(attr, index)
         value_getter = getattr(widget, method)
         value = value_getter().toString() if attr.startswith("calendarWidget") else value_getter()
         self._save_value_to_file(file_destination, file_row, file_column, value)
 
     def _save_chips_to_file(self, owner, attr):
         widget = getattr(owner, attr)
+        entry_count = self._determine_entry_count(attr)
         layout = widget.layout()
-        texts = [child.tabText(0) for child in layout.children()]
+        chip_layout = _populate_chip_layout(layout)
+        chips = _flatten(chip_layout)
+        texts = [chip.tabText(0) for chip in chips]
         for index, text in enumerate(texts):
-            file_destination, file_row, file_column = _determine_destination(attr, index)
+            file_destination, file_row, file_column = _determine_location(attr, index + 1)
             self._save_value_to_file(file_destination, file_row, file_column, text)
+
+        for index in range(len(texts), entry_count):
+            file_destination, file_row, file_column = _determine_location(attr, index + 1)
+            self._save_value_to_file(file_destination, file_row, file_column, "")
 
     def _load_widget_info_from_file(self, owner, attr, method, index=1):
         widget = getattr(owner, attr)
-        file_source, file_row, file_column = _determine_destination(attr, index)
+        file_source, file_row, file_column = _determine_location(attr, index)
         value_setter = getattr(widget, method)
         value = self._read_value_from_file(file_source, file_row, file_column)
         value_setter(QtCore.QDate.fromString(value)) if attr.startswith("calendarWidget") else value_setter(value)
@@ -233,7 +237,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         index = 1
         while index:
             try:
-                file_source, file_row, file_column = _determine_destination(attr, index)
+                file_source, file_row, file_column = _determine_location(attr, index)
                 value = self._read_value_from_file(file_source, file_row, file_column)
                 if value:
                     self._add_keyword(value, widget)
@@ -281,6 +285,21 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                 pass
 
         tmp_widget.destroy()
+
+        return index
+
+    def _determine_entry_count(self, attr):
+        index = 1
+        while index:
+            try:
+                file_source, file_row, file_column = _determine_location(attr, index)
+                value = self._read_value_from_file(file_source, file_row, file_column)
+                if value:
+                    index += 1
+                else:
+                    return index
+            except KeyError:
+                return index
 
         return index
 
