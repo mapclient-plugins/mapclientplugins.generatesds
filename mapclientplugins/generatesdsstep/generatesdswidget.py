@@ -2,6 +2,7 @@ import json
 import logging
 
 import os.path
+import pathlib
 
 import pandas as pd
 
@@ -554,7 +555,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             files_of_interest = _find_files_of_interest(primary_manifest_location)
             for key, values in files_of_interest.items():
                 for value in values:
-                    row = os.path.relpath(value, primary_manifest_location)
+                    row = pathlib.PureWindowsPath(os.path.relpath(value, primary_manifest_location)).as_posix()
                     self._save_value_to_file(os.path.join("primary", "manifest.xlsx"), row, "additional types", key)
                     self._save_value_to_file(os.path.join("primary", "manifest.xlsx"), row, "file type", "json")
                     self._save_value_to_file(os.path.join("primary", "manifest.xlsx"), row, "species", self._ui.comboBox__manifest__species.currentText())
