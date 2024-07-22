@@ -1,6 +1,7 @@
 """
 MAP Client Plugin Step
 """
+import logging
 import os
 import json
 import shutil
@@ -13,6 +14,9 @@ from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint, workflowS
 from mapclientplugins.generatesdsstep.configuredialog import ConfigureDialog
 from mapclientplugins.generatesdsstep.generatesdswidget import GenerateSDSWidget
 from mapclientplugins.generatesdsstep.definitions import PROTOCOL_LAYOUT, DERIVATIVE_FOLDER, SCAFFOLD_INFO_FILE
+
+
+logger = logging.getLogger(__name__)
 
 
 def generate_folders(output_dir, folder_name_list):
@@ -100,6 +104,7 @@ class GenerateSDSStep(WorkflowStepMountPoint):
 
                     matched_config_files = []
                     step_index_map = {}
+                    original_data_gathered = False
                     original_index_step_map = {}
                     original_connections = {}
                     workflow_data = {}
@@ -108,12 +113,13 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                         if i['type'] == 'identifier_file':
                             source_configuration_dir = os.path.dirname(i['value'])
                             target_configuration_dir = os.path.join(output_dir, i['destination'])
+                            step_configuration_filename = os.path.basename(i['value'])
 
                             wf = wm.load_workflow_virtually(source_configuration_dir)
 
                             shutil.copy(i['value'], target_configuration_dir)
 
-                            step_identifier, configuration_ext = os.path.splitext(os.path.basename(i['value']))
+                            step_identifier, configuration_ext = os.path.splitext(step_configuration_filename)
                             step_name = get_step_name_from_identifier(wf, step_identifier)
                             _update_step_index_map(step_index_map, step_identifier, 1, len(required_steps))
                             required_steps.append((step_name, step_identifier))
@@ -130,12 +136,7 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                                 config = f.read()
                             step.deserialize(config)
 
-                            set_workflow_data = False
-                            step_connections = None
-                            scaffold_creator_index = None
-                            argon_viewer_index = None
-                            if step.getName() == "Scaffold Creator":
-                                set_workflow_data = True
+                            if not original_data_gathered:
                                 wf.beginGroup('nodes')
                                 node_count = wf.beginReadArray('nodelist')
                                 for node_index in range(node_count):
@@ -146,27 +147,31 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                                     connections = determine_connections(wf, node_index)
                                     original_connections[node_index] = connections
                                     _update_step_index_map(step_index_map, identifier, 0, node_index)
-                                    if name == "Scaffold Creator":
-                                        scaffold_creator_index = node_index
-                                        step_connections = connections
-                                    elif name == "Argon Viewer":
-                                        argon_viewer_index = node_index
 
                                 wf.endArray()
                                 wf.endGroup()
+                                original_data_gathered = True
 
-                                config_files = get_steps_additional_config_files(step)
-                                if len(config_files) > 0:
-                                    matched_config_files.append(config_files[0])
-                            elif step.getName() == "Argon Viewer":
-                                set_workflow_data = True
+                            workflow_data[step_identifier] = {
+                                "config": step_configuration_filename,
+                                "internal": get_steps_additional_config_files(step),
+                            }
+                            if step.getName() == "Argon Scene Exporter":
+                                try:
+                                    config_data = json.loads(config)
+                                    for expected_key in ["outputDir", "previous_location", "exportType"]:
+                                        if expected_key not in config_data:
+                                            logger.warn(f"Configuration file for {step_configuration_filename} does not follow expected standard.")
+                                    if "outputDir" in config_data:
+                                        config_data["outputDir"] = "../derivative"
+                                    if "previous_location" in config_data:
+                                        config_data["previous_location"] = "."
 
-                            if set_workflow_data:
-                                config_files = get_steps_additional_config_files(step)
-                                if len(config_files) > 0:
-                                    workflow_data[step_identifier] = config_files[0]
-                                if step_connections and _valid_connection(step_connections[0], scaffold_creator_index, argon_viewer_index):
-                                    workflow_data['Connection'] = step_connections[0]
+                                    with open(os.path.join(target_configuration_dir, step_configuration_filename), "w") as f:
+                                        json.dump(config_data, f, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+
+                                except json.JSONDecodeError:
+                                    logging.warn(f"Configuration file for {step_configuration_filename} is not JSON decodable.")
 
                             copy_step_additional_config_files(step, source_configuration_dir, target_configuration_dir)
                         elif i['type'] == 'directory':
@@ -182,14 +187,6 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                         elif i['type'] == 'dict':
                             with open(os.path.join(output_dir, i['destination']), 'w') as f:
                                 json.dump(i['value'], f)
-
-                    workflow_data['Connection'] = (
-                        step_index_map[original_index_step_map[workflow_data['Connection'][0]]][1],
-                        workflow_data['Connection'][1],
-                        step_index_map[original_index_step_map[workflow_data['Connection'][2]]][1],
-                        workflow_data['Connection'][3],
-                        workflow_data['Connection'][4],
-                    )
 
                     new_connections = []
                     for required_step in required_steps:
@@ -213,7 +210,7 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                         'id': 'scaffold-info-using-map-client-workflow',
                         'version': '1.0.0',
                         'mapping-tools-workflow-file': wf_file,
-                        'scaffold-settings-files': workflow_data,
+                        'settings-files': workflow_data,
                     }
                     with open(os.path.join(output_dir, 'primary', SCAFFOLD_INFO_FILE), 'w') as f:
                         json.dump(scaffold_info, f, default=lambda o: o.__dict__, sort_keys=True, indent=2)
