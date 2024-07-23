@@ -108,6 +108,7 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                     original_index_step_map = {}
                     original_connections = {}
                     workflow_data = {}
+                    workflow_provenance_file = output_dir
                     required_steps = []
                     for i in self._portData1['inputs']:
                         if i['type'] == 'identifier_file':
@@ -161,7 +162,7 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                                     config_data = json.loads(config)
                                     for expected_key in ["outputDir", "previous_location", "exportType"]:
                                         if expected_key not in config_data:
-                                            logger.warn(f"Configuration file for {step_configuration_filename} does not follow expected standard.")
+                                            logger.warning(f"Configuration file for {step_configuration_filename} does not follow expected standard.")
                                     if "outputDir" in config_data:
                                         config_data["outputDir"] = "../derivative"
                                     if "previous_location" in config_data:
@@ -171,7 +172,7 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                                         json.dump(config_data, f, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
                                 except json.JSONDecodeError:
-                                    logging.warn(f"Configuration file for {step_configuration_filename} is not JSON decodable.")
+                                    logging.warning(f"Configuration file for {step_configuration_filename} is not JSON decodable.")
 
                             copy_step_additional_config_files(step, source_configuration_dir, target_configuration_dir)
                         elif i['type'] == 'directory':
@@ -185,7 +186,8 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                                 if os.path.isfile(src_name):
                                     shutil.copy2(src_name, dst_name)
                         elif i['type'] == 'dict':
-                            with open(os.path.join(output_dir, i['destination']), 'w') as f:
+                            workflow_provenance_file = os.path.join(output_dir, i['destination'])
+                            with open(workflow_provenance_file, 'w') as f:
                                 json.dump(i['value'], f)
 
                     new_connections = []
@@ -205,11 +207,11 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                     workflow_location = os.path.join(output_dir, 'primary')
                     wf = wm.create_empty_workflow(workflow_location)
                     create_from(wf, required_steps, new_connections, workflow_location)
-                    wf_file = os.path.basename(wf.fileName())
                     scaffold_info = {
                         'id': 'scaffold-info-using-map-client-workflow',
                         'version': '1.0.0',
-                        'mapping-tools-workflow-file': wf_file,
+                        'mapping-tools-workflow-file': os.path.relpath(wf.fileName(), workflow_location),
+                        'mapping-tools-provenance-file': os.path.relpath(workflow_provenance_file, workflow_location),
                         'settings-files': workflow_data,
                     }
                     with open(os.path.join(output_dir, 'primary', SCAFFOLD_INFO_FILE), 'w') as f:
