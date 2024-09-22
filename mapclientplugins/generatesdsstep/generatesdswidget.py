@@ -256,19 +256,19 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui.databaseOnlyComboBox__dataset_description__Study_technique.setCurrentIndex(0)
 
     def _save_value_to_file(self, file_destination, file_row, file_column, value):
-        df = pd.read_excel(os.path.join(self._dataset_loc, file_destination), index_col=0).fillna("")
+        df = pd.read_excel(os.path.join(self._dataset_loc, file_destination), index_col=0, dtype=object).fillna("")
         df.at[file_row, file_column] = int(value) if f"{value}".isdigit() else value
         df.to_excel(os.path.join(self._dataset_loc, file_destination))
 
     def _read_value_from_file(self, file_source, file_row, file_column):
-        df = pd.read_excel(os.path.join(self._dataset_loc, file_source), index_col=0, dtype=str).fillna("")
+        df = pd.read_excel(os.path.join(self._dataset_loc, file_source), index_col=0).fillna("")
         return df.at[file_row, file_column]
 
     def _save_widget_info_to_file(self, owner, attr, method, index=1):
         widget = getattr(owner, attr)
         file_destination, file_row, file_column = _determine_location(attr, index)
         value_getter = getattr(widget, method)
-        value = value_getter().toString() if attr.startswith("calendarWidget") else value_getter()
+        value = pd.Timestamp(value_getter().toString("yyyyMMdd")) if attr.startswith("calendarWidget") else value_getter()
         self._save_value_to_file(file_destination, file_row, file_column, value)
 
     def _save_chips_to_file(self, owner, attr):
@@ -283,12 +283,16 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             file_destination, file_row, file_column = _determine_location(attr, index + 1)
             self._save_value_to_file(file_destination, file_row, file_column, "")
 
-    def _load_widget_info_from_file(self, owner, attr, method, index=1):
+    def _load_widget_info_from_file(self, owner, attr, method, index=1, info_type=None):
         widget = getattr(owner, attr)
         file_source, file_row, file_column = _determine_location(attr, index)
         value_setter = getattr(widget, method)
         value = self._read_value_from_file(file_source, file_row, file_column)
-        value_setter(QtCore.QDate.fromString(value)) if attr.startswith("calendarWidget") else value_setter(value)
+        if value:
+            if info_type is None:
+                value_setter(value)
+            else:
+                value_setter(info_type(value))
 
     def _load_chips_from_file(self, owner, attr):
         widget = getattr(owner, attr)
@@ -372,7 +376,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             elif attr.startswith("calendarWidget"):
                 self._load_widget_info_from_file(self._ui, attr, "setSelectedDate")
             elif attr.startswith("spinBox"):
-                self._load_widget_info_from_file(self._ui, attr, "valueFromText")
+                self._load_widget_info_from_file(self._ui, attr, "setValue")
             elif attr.startswith("widgetForChips"):
                 self._load_chips_from_file(self._ui, attr)
 
@@ -384,7 +388,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             widget = self._ui.tabWidgetContributors.widget(index)
             for attr in widget.ui_elements():
                 if attr.startswith("comboBox"):
-                    self._load_widget_info_from_file(widget.ui_owner(), attr, "addItem", index + 1)
+                    self._load_widget_info_from_file(widget.ui_owner(), attr, "addItem", index + 1, info_type=str)
 
         other_count = self._determine_other_count()
         for index in range(other_count):
@@ -394,7 +398,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             widget = self._ui.tabWidgetOthers.widget(index)
             for attr in widget.ui_elements():
                 if attr.startswith("comboBox"):
-                    self._load_widget_info_from_file(widget.ui_owner(), attr, "addItem", index + 1)
+                    self._load_widget_info_from_file(widget.ui_owner(), attr, "addItem", index + 1, info_type=str)
 
     def _dataset_description_dataset_type(self):
         return "computational" if self._dataset_type == "Scaffold" else self._dataset_type
