@@ -8,9 +8,9 @@ import shutil
 
 from PySide6 import QtGui, QtWidgets, QtCore
 
-from mapclient.core.utils import copy_step_additional_config_files, get_steps_additional_config_files
+from mapclient.core.utils import copy_step_additional_config_files, get_steps_additional_config_files, create_configured_step
 from mapclient.core.workflow.workflowscene import determine_connections, create_from, get_step_name_from_identifier
-from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint, workflowStepFactory
+from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclientplugins.generatesdsstep.configuredialog import ConfigureDialog
 from mapclientplugins.generatesdsstep.generatesdswidget import GenerateSDSWidget
 from mapclientplugins.generatesdsstep.definitions import PROTOCOL_LAYOUT, DERIVATIVE_FOLDER, SCAFFOLD_INFO_FILE
@@ -125,17 +125,10 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                             _update_step_index_map(step_index_map, step_identifier, 1, len(required_steps))
                             required_steps.append((step_name, step_identifier))
 
-                            step = workflowStepFactory(step_name, target_configuration_dir)
-                            step.setIdentifier(step_identifier)
-                            step.setLocation(source_configuration_dir)
-
-                            def _mock_identifier_occurs_count(arg):
-                                return 1
-
-                            step._identifierOccursCount = _mock_identifier_occurs_count
                             with open(i['value']) as f:
                                 config = f.read()
-                            step.deserialize(config)
+
+                            step = create_configured_step(step_identifier, step_name, config, source_configuration_dir)
 
                             if not original_data_gathered:
                                 wf.beginGroup('nodes')
@@ -159,7 +152,7 @@ class GenerateSDSStep(WorkflowStepMountPoint):
                             }
                             if step.getName() == "Argon Scene Exporter":
                                 try:
-                                    config_data = json.loads(config)
+                                    config_data = json.loads(step.serialize())
                                     for expected_key in ["outputDir", "previous_location", "exportType"]:
                                         if expected_key not in config_data:
                                             logger.warning(f"Configuration file for {step_configuration_filename} does not follow expected standard.")
