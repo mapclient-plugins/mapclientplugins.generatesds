@@ -3,7 +3,7 @@
 MAP Client Plugin - Generated from MAP Client v0.18.0
 """
 
-__version__ = '0.3.1'
+__version__ = '0.3.2'
 __author__ = 'Kay Wang'
 __stepname__ = 'generatesds'
 __location__ = 'https://github.com/mapclient-plugins/mapclientplugins.generatesds'
