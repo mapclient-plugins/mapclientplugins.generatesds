@@ -384,19 +384,19 @@ class Ui_GenerateSDSWidget(object):
 
         self.horizontalLayout_10.addItem(self.horizontalSpacer)
 
-        self.pushButtonAddSample = QPushButton(self.pageSubjectsAndSamples)
-        self.pushButtonAddSample.setObjectName(u"pushButtonAddSample")
+        self.pushButtonAddSubject = QPushButton(self.pageSubjectsAndSamples)
+        self.pushButtonAddSubject.setObjectName(u"pushButtonAddSubject")
 
-        self.horizontalLayout_10.addWidget(self.pushButtonAddSample)
+        self.horizontalLayout_10.addWidget(self.pushButtonAddSubject)
 
         self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_10.addItem(self.horizontalSpacer_5)
 
-        self.pushButtonRemoveSample = QPushButton(self.pageSubjectsAndSamples)
-        self.pushButtonRemoveSample.setObjectName(u"pushButtonRemoveSample")
+        self.pushButtonRemoveSubject = QPushButton(self.pageSubjectsAndSamples)
+        self.pushButtonRemoveSubject.setObjectName(u"pushButtonRemoveSubject")
 
-        self.horizontalLayout_10.addWidget(self.pushButtonRemoveSample)
+        self.horizontalLayout_10.addWidget(self.pushButtonRemoveSubject)
 
         self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -637,8 +637,8 @@ class Ui_GenerateSDSWidget(object):
         self.labelStudyPrimaryConclusion.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study primary conclusion:", None))
         self.groupBoxDynamic.setTitle(QCoreApplication.translate("GenerateSDSWidget", u"Dynamic Group Box", None))
         self.labelNumberOfSamples.setText(QCoreApplication.translate("GenerateSDSWidget", u"Number of samples:", None))
-        self.pushButtonAddSample.setText(QCoreApplication.translate("GenerateSDSWidget", u"Add Sample", None))
-        self.pushButtonRemoveSample.setText(QCoreApplication.translate("GenerateSDSWidget", u"Remove Sample", None))
+        self.pushButtonAddSubject.setText(QCoreApplication.translate("GenerateSDSWidget", u"Add Subject", None))
+        self.pushButtonRemoveSubject.setText(QCoreApplication.translate("GenerateSDSWidget", u"Remove Subject", None))
         self.labelNumberOfSubjects.setText(QCoreApplication.translate("GenerateSDSWidget", u"Number of subjects:", None))
         self.labelSpecies.setText(QCoreApplication.translate("GenerateSDSWidget", u"Species:  ", None))
         self.labelOrgan.setText(QCoreApplication.translate("GenerateSDSWidget", u"Organ:  ", None))

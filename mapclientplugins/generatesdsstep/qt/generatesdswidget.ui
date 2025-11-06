@@ -644,9 +644,9 @@
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButtonAddSample">
+                  <widget class="QPushButton" name="pushButtonAddSubject">
                    <property name="text">
-                    <string>Add Sample</string>
+                    <string>Add Subject</string>
                    </property>
                   </widget>
                  </item>
@@ -664,9 +664,9 @@
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButtonRemoveSample">
+                  <widget class="QPushButton" name="pushButtonRemoveSubject">
                    <property name="text">
-                    <string>Remove Sample</string>
+                    <string>Remove Subject</string>
                    </property>
                   </widget>
                  </item>
