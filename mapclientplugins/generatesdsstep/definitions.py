@@ -56,8 +56,17 @@ class ScaffoldFiles(RequiredFiles):
         super(ScaffoldFiles, self).__init__()
 
 
+class ComputationalFiles(_ConditionalFiles):
+
+    def __init__(self):
+        super(ComputationalFiles, self).__init__()
+        self._files.extend(["subjects.xlsx", "samples.xlsx"])
+        self._dirs.extend(["derivative"])
+
+
 PROTOCOL_LAYOUT = {
-    "Code": CodeFiles(),
-    "Experiment": ExperimentFiles(),
-    "Scaffold": ScaffoldFiles(),
+    "code": CodeFiles(),
+    "experiment": ExperimentFiles(),
+    "scaffold": ScaffoldFiles(),
+    "computational": ComputationalFiles(),
 }

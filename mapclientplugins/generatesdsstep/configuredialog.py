@@ -22,7 +22,7 @@ class ConfigureDialog(QtWidgets.QDialog):
         # and know how many occurrences of the current identifier there should
         # be.
         self._previousIdentifier = ''
-        # Set a place holder for a callable that will get set from the step.
+        # Set a placeholder for a callable that will get set from the step.
         # We will use this method to decide whether the identifier is unique.
         self.identifierOccursCount = None
         self._previousLocation = ''
@@ -31,27 +31,6 @@ class ConfigureDialog(QtWidgets.QDialog):
 
     def _make_connections(self):
         self._ui.lineEdit0.textChanged.connect(self.validate)
-        self._ui.lineEditDatasetName.textChanged.connect(self.validate)
-        self._ui.lineEditDirectoryLocation.textChanged.connect(self.validate)
-        self._ui.pushButtonDirectoryChooser.clicked.connect(self._directory_chooser_clicked)
-
-    def _directory_chooser_clicked(self):
-        location = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Directory', self._previousLocation)
-
-        if location:
-            self._previousLocation = location
-            display_location = self._output_location(location)
-            self._ui.lineEditDirectoryLocation.setText(display_location)
-
-    def _output_location(self, location=None):
-        if location is None:
-            display_path = self._ui.lineEditDirectoryLocation.text()
-        else:
-            display_path = location
-        if self._workflow_location and os.path.isabs(display_path):
-            display_path = os.path.relpath(display_path, self._workflow_location)
-
-        return display_path
 
     def setWorkflowLocation(self, location):
         self._workflow_location = location
@@ -67,13 +46,15 @@ class ConfigureDialog(QtWidgets.QDialog):
                 self, 'Invalid Configuration',
                 'This configuration is invalid.  Unpredictable behaviour may result if you choose \'Yes\', '
                 'are you sure you want to save this configuration?',
-                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No, QtWidgets.QMessageBox.StandardButton.No)
+                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
+                QtWidgets.QMessageBox.StandardButton.No)
         elif self.dataset_exists() and self._ui.checkBoxOverwriteExisting.isChecked():
             result = QtWidgets.QMessageBox.warning(
                 self, 'Dataset exists',
                 'The dataset folder already exists. Files in the folder may be overwritten if you choose \'Yes\', '
                 'are you sure you want to save this configuration?',
-                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No, QtWidgets.QMessageBox.StandardButton.No)
+                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
+                QtWidgets.QMessageBox.StandardButton.No)
 
         if result == QtWidgets.QMessageBox.StandardButton.Yes:
             QtWidgets.QDialog.accept(self)
@@ -99,19 +80,7 @@ class ConfigureDialog(QtWidgets.QDialog):
         else:
             self._ui.lineEdit0.setStyleSheet(INVALID_STYLE_SHEET)
 
-        dataset_name_valid = len(self._ui.lineEditDatasetName.text())
-        self._ui.lineEditDatasetName.setStyleSheet(DEFAULT_STYLE_SHEET
-                                                   if dataset_name_valid else INVALID_STYLE_SHEET)
-
-        dir_path = self._output_location()
-        if self._workflow_location:
-            dir_path = os.path.join(self._workflow_location, dir_path)
-
-        directory_valid = os.path.isdir(dir_path) and len(self._ui.lineEditDirectoryLocation.text())
-        self._ui.lineEditDirectoryLocation.setStyleSheet \
-            (DEFAULT_STYLE_SHEET if directory_valid else INVALID_STYLE_SHEET)
-
-        return valid and directory_valid
+        return valid
 
     def getConfig(self):
         """
@@ -120,13 +89,10 @@ class ConfigureDialog(QtWidgets.QDialog):
         identifier over the whole of the workflow.
         """
         self._previousIdentifier = self._ui.lineEdit0.text()
-        output_dir = os.path.join(self._output_location(), self._ui.lineEditDatasetName.text())
-        config = {'identifier': self._ui.lineEdit0.text(), 'DatasetName': self._ui.lineEditDatasetName.text(),
-                  'DatasetType': self._ui.comboBoxDatasetType.currentText(),
-                  'DerivativeExists': self._ui.checkBoxDerivativeDataExists.isChecked(),
-                  'Directory': self._output_location(),
-                  'OverwriteExisting': self._ui.checkBoxOverwriteExisting.isChecked(),
-                  'outputDir': output_dir}
+        config = {
+            'identifier': self._ui.lineEdit0.text(),
+            'OverwriteExisting': self._ui.checkBoxOverwriteExisting.isChecked(),
+        }
         return config
 
     def setConfig(self, config):
@@ -137,8 +103,4 @@ class ConfigureDialog(QtWidgets.QDialog):
         """
         self._previousIdentifier = config['identifier']
         self._ui.lineEdit0.setText(config['identifier'])
-        self._ui.lineEditDatasetName.setText(config['DatasetName'])
-        self._ui.comboBoxDatasetType.setCurrentText(config['DatasetType'])
-        self._ui.checkBoxDerivativeDataExists.setChecked(config['DerivativeExists'])
         self._ui.checkBoxOverwriteExisting.setChecked(config['OverwriteExisting'])
-        self._ui.lineEditDirectoryLocation.setText(config['Directory'])

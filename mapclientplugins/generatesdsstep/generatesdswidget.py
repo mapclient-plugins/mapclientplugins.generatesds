@@ -138,13 +138,14 @@ def _find_files_of_interest(location):
 
 class GenerateSDSWidget(QtWidgets.QWidget):
 
-    def __init__(self, dataset_loc, dataset_type, parent=None):
+    def __init__(self, dataset_protocol, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
+        dataset_name = dataset_protocol.get('name')
         self._ui = Ui_GenerateSDSWidget()
         self._ui.setupUi(self)
-        self._ui.stackedWidgetDynamic.setCurrentIndex(1 if dataset_type == "Scaffold" else 0)
-        self._ui.groupBoxDynamic.setTitle("Scaffold manifest" if dataset_type == "Scaffold" else "Subjects and Samples")
+        self._ui.stackedWidgetDynamic.setCurrentIndex(1 if dataset_name == "SimpleScaffold" else 0)
+        self._ui.groupBoxDynamic.setTitle("Scaffold manifest" if dataset_name == "SimpleScaffold" else "Subjects and Samples")
         self._ui.pushButtonAddKeyword.setEnabled(False)
         self._ui.widgetForChips__dataset_description__Keywords.setLayout(QtWidgets.QGridLayout())
         self._ui.widgetForChips__dataset_description__Study_technique.setLayout(QtWidgets.QGridLayout())
@@ -156,8 +157,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._database = {"Contributor_information": [], "Other_information": {}}
         self._database_filename = os.path.join(application_data_directory, GENERATE_SDS_DATABASE_FILENAME)
 
-        self._dataset_loc = dataset_loc
-        self._dataset_type = dataset_type
+        self._dataset_loc = dataset_protocol.get('inputs')[0]['value']
+        self._dataset_type = dataset_protocol.get('type')
 
         self._load_information()
         self._load_database()
@@ -230,6 +231,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             except Timeout:
                 logger.info("Failed to read Generate SDS database.")
 
+        print("load database:")
+        print(self._database)
         contributor_information = self._database.get("Contributor_information", [])
         for index in range(self._ui.tabWidgetContributors.count()):
             widget = self._ui.tabWidgetContributors.widget(index)
@@ -255,13 +258,22 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui.databaseOnlyComboBox__dataset_description__Study_technique.insertItem(0, "")
         self._ui.databaseOnlyComboBox__dataset_description__Study_technique.setCurrentIndex(0)
 
+    def _load_clean_dataframe(self, file_destination):
+        df = pd.read_excel(os.path.join(self._dataset_loc, file_destination), index_col=0, dtype=object)
+        string_columns = df.select_dtypes(include=['object']).columns
+        df[string_columns] = df[string_columns].fillna("")
+        numeric_columns = df.select_dtypes(include=['number']).columns
+        df[numeric_columns] = df[numeric_columns].fillna(0)
+
+        return df
+
     def _save_value_to_file(self, file_destination, file_row, file_column, value):
-        df = pd.read_excel(os.path.join(self._dataset_loc, file_destination), index_col=0, dtype=object).fillna("")
+        df = self._load_clean_dataframe(file_destination)
         df.at[file_row, file_column] = int(value) if f"{value}".isdigit() else value
         df.to_excel(os.path.join(self._dataset_loc, file_destination))
 
     def _read_value_from_file(self, file_source, file_row, file_column):
-        df = pd.read_excel(os.path.join(self._dataset_loc, file_source), index_col=0).fillna("")
+        df = self._load_clean_dataframe(file_source)
         return df.at[file_row, file_column]
 
     def _save_widget_info_to_file(self, owner, attr, method, index=1):
@@ -283,91 +295,82 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             file_destination, file_row, file_column = _determine_location(attr, index + 1)
             self._save_value_to_file(file_destination, file_row, file_column, "")
 
-    def _load_widget_info_from_file(self, owner, attr, method, index=1, info_type=None):
+    def _load_widget_info_from_file(self, owner, attr, method, index=1, info_type=None, suppress_key_error=True):
         widget = getattr(owner, attr)
         file_source, file_row, file_column = _determine_location(attr, index)
         value_setter = getattr(widget, method)
-        value = self._read_value_from_file(file_source, file_row, file_column)
+        value = None
+        try:
+            value = self._read_value_from_file(file_source, file_row, file_column)
+        except KeyError:
+            if not suppress_key_error:
+                raise
+
         if value:
-            if info_type is None:
-                value_setter(value)
-            else:
-                value_setter(info_type(value))
+            value_setter(value if info_type is None else info_type(value))
 
     def _load_chips_from_file(self, owner, attr):
         widget = getattr(owner, attr)
-        index = 1
-        while index:
-            try:
-                file_source, file_row, file_column = _determine_location(attr, index)
-                value = self._read_value_from_file(file_source, file_row, file_column)
-                if value:
-                    self._add_chip(value, widget)
-                    index += 1
-                else:
-                    index = 0
-            except KeyError:
-                index = 0
+        count = self._determine_entry_count(attr)
+        for index in range(1, count + 1):
+            file_source, file_row, file_column = _determine_location(attr, index)
+            value = self._read_value_from_file(file_source, file_row, file_column)
+            if value:
+                self._add_chip(value, widget)
 
     def _determine_contributor_count(self):
-        tmp_widget = ContributorInformationWidget()
-        index = 0
-
-        self._load_widget_info_from_file(tmp_widget.ui_owner(), "comboBox__dataset_description__Contributor_name", "setCurrentText", index + 1)
-        current_name = tmp_widget.current_name()
-        while current_name:
+        index = -1
+        while True:
             index += 1
             try:
-                self._load_widget_info_from_file(tmp_widget.ui_owner(), "comboBox__dataset_description__Contributor_name", "setCurrentText", index + 1)
+                tmp_widget = ContributorInformationWidget()
+                self._load_widget_info_from_file(tmp_widget.ui_owner(), "comboBox__dataset_description__Contributor_name", "setCurrentText", index + 1, suppress_key_error=False)
                 current_name = tmp_widget.current_name()
+                tmp_widget.destroy()
+                if not current_name:
+                    break
             except KeyError:
-                current_name = ""
-
-        tmp_widget.destroy()
+                break
 
         return index
 
     def _determine_other_count(self):
-        tmp_widget = OtherInformationWidget()
-        index = 0
+        have_content = True
+        index = -1
 
-        for attr in tmp_widget.ui_elements():
-            if attr.startswith("comboBox"):
-                self._load_widget_info_from_file(tmp_widget.ui_owner(), attr, "setCurrentText", index + 1)
-
-        while not tmp_widget.is_empty():
+        while have_content:
             index += 1
             try:
-                tmp_widget.destroy()
                 tmp_widget = OtherInformationWidget()
                 for attr in tmp_widget.ui_elements():
                     if attr.startswith("comboBox"):
-                        self._load_widget_info_from_file(tmp_widget.ui_owner(), attr, "setCurrentText", index + 1)
-            except KeyError:
-                pass
+                        self._load_widget_info_from_file(tmp_widget.ui_owner(), attr, "setCurrentText", index + 1, suppress_key_error=False)
 
-        tmp_widget.destroy()
+                have_content = not tmp_widget.is_empty()
+                tmp_widget.destroy()
+            except KeyError:
+                have_content = False
 
         return index
 
     def _determine_entry_count(self, attr):
-        index = 1
-        while index:
+        index = -1
+        while True:
+            index += 1
             try:
-                file_source, file_row, file_column = _determine_location(attr, index)
+                file_source, file_row, file_column = _determine_location(attr, index + 1)
                 value = self._read_value_from_file(file_source, file_row, file_column)
-                if value:
-                    index += 1
-                else:
-                    return index - 1
-            except KeyError:
-                return index - 1
 
-        return index - 1
+                if not value:
+                    break
+
+            except KeyError:
+                break
+
+        return index
 
     def _load_information(self):
         self._create_manifest()
-
         for attr in dir(self._ui):
             if attr.startswith("comboBox"):
                 self._load_widget_info_from_file(self._ui, attr, "addItem")
@@ -400,11 +403,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
                 if attr.startswith("comboBox"):
                     self._load_widget_info_from_file(widget.ui_owner(), attr, "addItem", index + 1, info_type=str)
 
-    def _dataset_description_dataset_type(self):
-        return "computational" if self._dataset_type == "Scaffold" else self._dataset_type
-
     def _save_information(self):
-        self._save_value_to_file("dataset_description.xlsx", "Type", "Value", self._dataset_description_dataset_type())
+        self._save_value_to_file("dataset_description.xlsx", "Type", "Value", self._dataset_type)
 
         for attr in dir(self._ui):
             if attr.startswith("comboBox"):
