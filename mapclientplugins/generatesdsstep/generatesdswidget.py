@@ -159,6 +159,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
         self._dataset_loc = dataset_protocol.get('inputs')[0]['value']
         self._dataset_type = dataset_protocol.get('type')
+        self._dataset_name = dataset_protocol.get('name')
 
         self._load_information()
         self._load_database()
@@ -231,8 +232,6 @@ class GenerateSDSWidget(QtWidgets.QWidget):
             except Timeout:
                 logger.info("Failed to read Generate SDS database.")
 
-        print("load database:")
-        print(self._database)
         contributor_information = self._database.get("Contributor_information", [])
         for index in range(self._ui.tabWidgetContributors.count()):
             widget = self._ui.tabWidgetContributors.widget(index)
@@ -268,9 +267,10 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         return df
 
     def _save_value_to_file(self, file_destination, file_row, file_column, value):
-        df = self._load_clean_dataframe(file_destination)
-        df.at[file_row, file_column] = int(value) if f"{value}".isdigit() else value
-        df.to_excel(os.path.join(self._dataset_loc, file_destination))
+        if value:
+            df = self._load_clean_dataframe(file_destination)
+            df.at[file_row, file_column] = int(value) if f"{value}".isdigit() else value
+            df.to_excel(os.path.join(self._dataset_loc, file_destination))
 
     def _read_value_from_file(self, file_source, file_row, file_column):
         df = self._load_clean_dataframe(file_source)
@@ -305,6 +305,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         except KeyError:
             if not suppress_key_error:
                 raise
+        except FileNotFoundError:
+            pass
 
         if value:
             value_setter(value if info_type is None else info_type(value))
@@ -545,16 +547,13 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         manifest_file = os.path.join(self._dataset_loc, "primary", "manifest.xlsx")
         if not os.path.exists(manifest_file):
             default_header = ["filename", "timestamp", "description", "file type", "additional types", "species", "organ"]
-            if self._dataset_type == "Scaffold":
+            if self._dataset_name == "SimpleScaffold":
                 default_data = [[SCAFFOLD_INFO_FILE, "", "Information on the organ scaffold in JSON format.", "json", "application/x.vnd.abi.organ-scaffold-info+json", "", ""]]
-            else:
-                default_data = [[""] * len(default_header)]
-
-            df = pd.DataFrame(default_data, columns=default_header)
-            df.to_excel(manifest_file, index=False)
+                df = pd.DataFrame(default_data, columns=default_header)
+                df.to_excel(manifest_file, index=False)
 
     def _annotate_misc(self):
-        if self._dataset_type == "Scaffold":
+        if self._dataset_name == "SimpleScaffold":
             primary_manifest_location = os.path.join(self._dataset_loc, "primary")
             files_of_interest = _find_files_of_interest(primary_manifest_location)
             for key, values in files_of_interest.items():

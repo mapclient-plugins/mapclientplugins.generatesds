@@ -8,7 +8,7 @@ DERIVATIVE_FOLDER = {"derivative"}
 class RequiredFiles:
 
     def __init__(self):
-        self._files = ["dataset_description.xlsx", "submission.xlsx"]
+        self._files = ["dataset_description.xlsx"]
         self._dirs = ["primary"]
 
     def files(self):
@@ -25,7 +25,7 @@ class _ConditionalFiles(RequiredFiles):
 
     def __init__(self):
         super(_ConditionalFiles, self).__init__()
-        self._files.extend(["manifest.xlsx", "README.md", "CHANGES"])
+        self._files.extend(["README.md"])
 
 
 class CodeFiles(_ConditionalFiles):
