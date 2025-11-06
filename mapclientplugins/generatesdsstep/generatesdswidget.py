@@ -10,9 +10,12 @@ from PySide6 import QtCore, QtWidgets
 from filelock import FileLock, Timeout
 
 from mapclient.settings.general import get_data_directory
+
+from mapclientplugins.generatesdsstep.addsubjectdialog import AddSubjectDialog
 from mapclientplugins.generatesdsstep.contributorinformationwidget import ContributorInformationWidget
 from mapclientplugins.generatesdsstep.definitions import GENERATE_SDS_DATABASE_FILENAME, SCAFFOLD_INFO_FILE, ARGON_DOCUMENT_MIME_TYPE, SCAFFOLD_SETTINGS_MIME_TYPE
 from mapclientplugins.generatesdsstep.otherrinformationwidget import OtherInformationWidget
+from mapclientplugins.generatesdsstep.removesubjectdialog import RemoveSubjectDialog
 from mapclientplugins.generatesdsstep.ui_generatesdswidget import Ui_GenerateSDSWidget
 
 logger = logging.getLogger(__name__)
@@ -177,6 +180,8 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         self._ui.databaseOnlyComboBox__dataset_description__Study_technique.editTextChanged.connect(self._study_technique_text_changed)
         self._ui.pushButtonAddKeyword.clicked.connect(self._add_keyword_clicked)
         self._ui.pushButtonAddStudy_technique.clicked.connect(self._add_study_technique_clicked)
+        self._ui.pushButtonAddSubject.clicked.connect(self._add_subject_clicked)
+        self._ui.pushButtonRemoveSubject.clicked.connect(self._remove_subject_clicked)
 
     def _keywords_text_changed(self, text):
         self._ui.pushButtonAddKeyword.setEnabled(text != '')
@@ -217,6 +222,16 @@ class GenerateSDSWidget(QtWidgets.QWidget):
 
     def _add_keyword_clicked(self):
         self._add_chip(self._ui.databaseOnlyComboBox__dataset_description__Keywords.currentText(), self._ui.widgetForChips__dataset_description__Keywords)
+
+    def _add_subject_clicked(self):
+        dlg = AddSubjectDialog(parent=self)
+        if dlg.exec_():
+            print("save")
+
+    def _remove_subject_clicked(self):
+        dlg = RemoveSubjectDialog(parent=self)
+        if dlg.exec_():
+            print("remove")
 
     def _add_chip(self, text, widget):
         chip = self._create_chip(text)
