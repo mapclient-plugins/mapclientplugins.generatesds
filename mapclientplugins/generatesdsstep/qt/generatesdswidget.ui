@@ -607,26 +607,84 @@
           <property name="title">
            <string>Dynamic Group Box</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="0" column="0">
             <widget class="QStackedWidget" name="stackedWidgetDynamic">
              <property name="currentIndex">
               <number>0</number>
              </property>
              <widget class="QWidget" name="pageSubjectsAndSamples">
               <layout class="QGridLayout" name="gridLayout_6">
+               <item row="1" column="0">
+                <widget class="QLabel" name="labelNumberOfSamples">
+                 <property name="text">
+                  <string>Number of samples:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QSpinBox" name="spinBox__dataset_description__Number_of_samples"/>
+               </item>
+               <item row="3" column="0" colspan="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_10">
+                 <item>
+                  <spacer name="horizontalSpacer">
+                   <property name="orientation">
+                    <enum>Qt::Orientation::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButtonAddSample">
+                   <property name="text">
+                    <string>Add Sample</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_5">
+                   <property name="orientation">
+                    <enum>Qt::Orientation::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButtonRemoveSample">
+                   <property name="text">
+                    <string>Remove Sample</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_6">
+                   <property name="orientation">
+                    <enum>Qt::Orientation::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </item>
                <item row="0" column="1">
                 <widget class="QSpinBox" name="spinBox__dataset_description__Number_of_subjects"/>
                </item>
@@ -640,20 +698,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <widget class="QSpinBox" name="spinBox__dataset_description__Number_of_samples"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="labelNumberOfSamples">
-                 <property name="text">
-                  <string>Number of samples:</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
+               <item row="4" column="0">
                 <widget class="QWidget" name="widgetSpacer_1" native="true"/>
                </item>
               </layout>

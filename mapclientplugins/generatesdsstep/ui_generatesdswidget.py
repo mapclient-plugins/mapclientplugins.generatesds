@@ -359,15 +359,52 @@ class Ui_GenerateSDSWidget(object):
         self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
         self.groupBoxDynamic = QGroupBox(self.frame_3)
         self.groupBoxDynamic.setObjectName(u"groupBoxDynamic")
-        self.verticalLayout_4 = QVBoxLayout(self.groupBoxDynamic)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_5 = QGridLayout(self.groupBoxDynamic)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
         self.stackedWidgetDynamic = QStackedWidget(self.groupBoxDynamic)
         self.stackedWidgetDynamic.setObjectName(u"stackedWidgetDynamic")
         self.pageSubjectsAndSamples = QWidget()
         self.pageSubjectsAndSamples.setObjectName(u"pageSubjectsAndSamples")
         self.gridLayout_6 = QGridLayout(self.pageSubjectsAndSamples)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.labelNumberOfSamples = QLabel(self.pageSubjectsAndSamples)
+        self.labelNumberOfSamples.setObjectName(u"labelNumberOfSamples")
+        self.labelNumberOfSamples.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_6.addWidget(self.labelNumberOfSamples, 1, 0, 1, 1)
+
+        self.spinBox__dataset_description__Number_of_samples = QSpinBox(self.pageSubjectsAndSamples)
+        self.spinBox__dataset_description__Number_of_samples.setObjectName(u"spinBox__dataset_description__Number_of_samples")
+
+        self.gridLayout_6.addWidget(self.spinBox__dataset_description__Number_of_samples, 1, 1, 1, 1)
+
+        self.horizontalLayout_10 = QHBoxLayout()
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_10.addItem(self.horizontalSpacer)
+
+        self.pushButtonAddSample = QPushButton(self.pageSubjectsAndSamples)
+        self.pushButtonAddSample.setObjectName(u"pushButtonAddSample")
+
+        self.horizontalLayout_10.addWidget(self.pushButtonAddSample)
+
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_10.addItem(self.horizontalSpacer_5)
+
+        self.pushButtonRemoveSample = QPushButton(self.pageSubjectsAndSamples)
+        self.pushButtonRemoveSample.setObjectName(u"pushButtonRemoveSample")
+
+        self.horizontalLayout_10.addWidget(self.pushButtonRemoveSample)
+
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_10.addItem(self.horizontalSpacer_6)
+
+
+        self.gridLayout_6.addLayout(self.horizontalLayout_10, 3, 0, 1, 2)
+
         self.spinBox__dataset_description__Number_of_subjects = QSpinBox(self.pageSubjectsAndSamples)
         self.spinBox__dataset_description__Number_of_subjects.setObjectName(u"spinBox__dataset_description__Number_of_subjects")
 
@@ -379,21 +416,10 @@ class Ui_GenerateSDSWidget(object):
 
         self.gridLayout_6.addWidget(self.labelNumberOfSubjects, 0, 0, 1, 1)
 
-        self.spinBox__dataset_description__Number_of_samples = QSpinBox(self.pageSubjectsAndSamples)
-        self.spinBox__dataset_description__Number_of_samples.setObjectName(u"spinBox__dataset_description__Number_of_samples")
-
-        self.gridLayout_6.addWidget(self.spinBox__dataset_description__Number_of_samples, 1, 1, 1, 1)
-
-        self.labelNumberOfSamples = QLabel(self.pageSubjectsAndSamples)
-        self.labelNumberOfSamples.setObjectName(u"labelNumberOfSamples")
-        self.labelNumberOfSamples.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_6.addWidget(self.labelNumberOfSamples, 1, 0, 1, 1)
-
         self.widgetSpacer_1 = QWidget(self.pageSubjectsAndSamples)
         self.widgetSpacer_1.setObjectName(u"widgetSpacer_1")
 
-        self.gridLayout_6.addWidget(self.widgetSpacer_1, 2, 0, 1, 1)
+        self.gridLayout_6.addWidget(self.widgetSpacer_1, 4, 0, 1, 1)
 
         self.stackedWidgetDynamic.addWidget(self.pageSubjectsAndSamples)
         self.pageScaffoldManifest = QWidget()
@@ -437,7 +463,7 @@ class Ui_GenerateSDSWidget(object):
 
         self.stackedWidgetDynamic.addWidget(self.pageScaffoldManifest)
 
-        self.verticalLayout_4.addWidget(self.stackedWidgetDynamic)
+        self.gridLayout_5.addWidget(self.stackedWidgetDynamic, 0, 0, 1, 1)
 
 
         self.horizontalLayout_9.addWidget(self.groupBoxDynamic)
@@ -610,8 +636,10 @@ class Ui_GenerateSDSWidget(object):
         self.labelStudyPurpose.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study purpose:", None))
         self.labelStudyPrimaryConclusion.setText(QCoreApplication.translate("GenerateSDSWidget", u"Study primary conclusion:", None))
         self.groupBoxDynamic.setTitle(QCoreApplication.translate("GenerateSDSWidget", u"Dynamic Group Box", None))
-        self.labelNumberOfSubjects.setText(QCoreApplication.translate("GenerateSDSWidget", u"Number of subjects:", None))
         self.labelNumberOfSamples.setText(QCoreApplication.translate("GenerateSDSWidget", u"Number of samples:", None))
+        self.pushButtonAddSample.setText(QCoreApplication.translate("GenerateSDSWidget", u"Add Sample", None))
+        self.pushButtonRemoveSample.setText(QCoreApplication.translate("GenerateSDSWidget", u"Remove Sample", None))
+        self.labelNumberOfSubjects.setText(QCoreApplication.translate("GenerateSDSWidget", u"Number of subjects:", None))
         self.labelSpecies.setText(QCoreApplication.translate("GenerateSDSWidget", u"Species:  ", None))
         self.labelOrgan.setText(QCoreApplication.translate("GenerateSDSWidget", u"Organ:  ", None))
         self.groupBoxStandardsInformation.setTitle(QCoreApplication.translate("GenerateSDSWidget", u"Standards information", None))
