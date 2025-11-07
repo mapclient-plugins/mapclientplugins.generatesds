@@ -224,14 +224,17 @@ class GenerateSDSWidget(QtWidgets.QWidget):
     def _add_keyword_clicked(self):
         self._add_chip(self._ui.databaseOnlyComboBox__dataset_description__Keywords.currentText(), self._ui.widgetForChips__dataset_description__Keywords)
 
+    def _update_subject_count(self, value):
+        self._ui.spinBox__dataset_description__Number_of_subjects.setValue(value)
+        self._save_widget_info_to_file(self._ui, "spinBox__dataset_description__Number_of_subjects", "value")
+
     def _add_subject_clicked(self):
         dlg = AddSubjectDialog(parent=self)
         if dlg.exec_():
             new_subject = dlg.accepted_data()
             subject_xlsx = os.path.join(self._dataset_loc, 'subjects.xlsx')
             add_row_to_excel(new_subject, subject_xlsx)
-            self._ui.spinBox__dataset_description__Number_of_subjects.setValue(self._ui.spinBox__dataset_description__Number_of_subjects.value() + 1)
-            self._save_widget_info_to_file(self._ui, "spinBox__dataset_description__Number_of_subjects", "value")
+            self._update_subject_count(self._ui.spinBox__dataset_description__Number_of_subjects.value() + 1)
 
     def _remove_subject_clicked(self):
         dlg = RemoveSubjectDialog(parent=self)
@@ -241,8 +244,7 @@ class GenerateSDSWidget(QtWidgets.QWidget):
         if dlg.exec_():
             subject_id = dlg.selected_subject()
             remove_subject_by_id(subject_id, subject_xlsx)
-            self._ui.spinBox__dataset_description__Number_of_subjects.setValue(self._ui.spinBox__dataset_description__Number_of_subjects.value() - 1)
-            self._save_widget_info_to_file(self._ui, "spinBox__dataset_description__Number_of_subjects", "value")
+            self._update_subject_count(self._ui.spinBox__dataset_description__Number_of_subjects.value() - 1)
 
     def _add_chip(self, text, widget):
         chip = self._create_chip(text)
