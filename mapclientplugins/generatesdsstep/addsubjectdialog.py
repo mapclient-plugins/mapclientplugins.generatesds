@@ -1,8 +1,7 @@
-import requests
 from PySide6 import QtWidgets, QtCore
 
 from mapclientplugins.generatesdsstep.ui_addsubjectdialog import Ui_AddSubjectDialog
-from mapclientplugins.generatesdsstep.utitilities.excel import resolve_doi_to_url, check_subject_id_is_in_dataset
+from mapclientplugins.generatesdsstep.utitilities.excel import check_subject_id_is_in_dataset
 
 
 class AddSubjectDialog(QtWidgets.QDialog):
@@ -13,6 +12,7 @@ class AddSubjectDialog(QtWidgets.QDialog):
         self._ui = Ui_AddSubjectDialog()
         self._ui.setupUi(self)
 
+        self._subject_id_text_edited("")
         self._make_connections()
 
     def _make_connections(self):
@@ -34,12 +34,11 @@ class AddSubjectDialog(QtWidgets.QDialog):
                 QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
 
                 check_failed = not check_subject_id_is_in_dataset(subject_id, doi)
-                print('check failed:', check_failed)
             finally:
                 QtWidgets.QApplication.restoreOverrideCursor()
 
             if check_failed:
-                QtWidgets.QMessageBox.warning(self, 'Invalid input', f'Could not find subject {subject_id} in dataset.')
+                QtWidgets.QMessageBox.warning(self, 'Invalid input', f'Could not find subject {subject_id} in dataset with DOI {doi}.')
                 return False
 
         return True
