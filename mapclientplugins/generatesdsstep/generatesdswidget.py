@@ -17,6 +17,7 @@ from mapclientplugins.generatesdsstep.definitions import GENERATE_SDS_DATABASE_F
 from mapclientplugins.generatesdsstep.otherrinformationwidget import OtherInformationWidget
 from mapclientplugins.generatesdsstep.removesubjectdialog import RemoveSubjectDialog
 from mapclientplugins.generatesdsstep.ui_generatesdswidget import Ui_GenerateSDSWidget
+from mapclientplugins.generatesdsstep.utitilities.excel import get_subject_list, remove_subject_by_id, add_row_to_excel
 
 logger = logging.getLogger(__name__)
 
@@ -226,12 +227,20 @@ class GenerateSDSWidget(QtWidgets.QWidget):
     def _add_subject_clicked(self):
         dlg = AddSubjectDialog(parent=self)
         if dlg.exec_():
-            print("save")
+            new_subject = dlg.accepted_data()
+            subject_xlsx = os.path.join(self._dataset_loc, 'subjects.xlsx')
+            add_row_to_excel(new_subject, subject_xlsx)
+            self._load_widget_info_from_file(self._ui, "spinBox__dataset_description__Number_of_subjects", "setValue")
 
     def _remove_subject_clicked(self):
         dlg = RemoveSubjectDialog(parent=self)
+        subject_xlsx = os.path.join(self._dataset_loc, 'subjects.xlsx')
+        subjects = get_subject_list(subject_xlsx)
+        dlg.set_subjects(subjects)
         if dlg.exec_():
-            print("remove")
+            subject_id = dlg.selected_subject()
+            remove_subject_by_id(subject_id, subject_xlsx)
+            self._load_widget_info_from_file(self._ui, "spinBox__dataset_description__Number_of_subjects", "setValue")
 
     def _add_chip(self, text, widget):
         chip = self._create_chip(text)
