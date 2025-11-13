@@ -48,22 +48,16 @@ class ConfigureDialog(QtWidgets.QDialog):
                 'are you sure you want to save this configuration?',
                 QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
                 QtWidgets.QMessageBox.StandardButton.No)
-        elif self.dataset_exists() and self._ui.checkBoxOverwriteExisting.isChecked():
-            result = QtWidgets.QMessageBox.warning(
-                self, 'Dataset exists',
-                'The dataset folder already exists. Files in the folder may be overwritten if you choose \'Yes\', '
-                'are you sure you want to save this configuration?',
-                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
-                QtWidgets.QMessageBox.StandardButton.No)
+        # elif self.dataset_exists() and self._ui.checkBoxOverwriteExisting.isChecked():
+        #     result = QtWidgets.QMessageBox.warning(
+        #         self, 'Dataset exists',
+        #         'The dataset folder already exists. Files in the folder may be overwritten if you choose \'Yes\', '
+        #         'are you sure you want to save this configuration?',
+        #         QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
+        #         QtWidgets.QMessageBox.StandardButton.No)
 
         if result == QtWidgets.QMessageBox.StandardButton.Yes:
             QtWidgets.QDialog.accept(self)
-
-    def dataset_exists(self):
-        config = self.getConfig()
-        output_dir = config['outputDir'] if os.path.isabs(config['outputDir']) else os.path.join(
-            self._workflow_location, config['outputDir'])
-        return os.path.isdir(output_dir)
 
     def validate(self):
         """
