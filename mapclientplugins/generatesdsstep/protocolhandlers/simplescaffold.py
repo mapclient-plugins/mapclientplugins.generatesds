@@ -28,6 +28,8 @@ def run_protocol(model, inputs, output_dir):
     workflow_data = {}
     workflow_provenance_file = output_dir
     required_steps = []
+    # Remove the target directory, we don't want to do anything about that here.
+    inputs.pop(0)
     for i in inputs:
         if i['type'] == 'identifier_file':
             source_configuration_dir = os.path.dirname(i['value'])

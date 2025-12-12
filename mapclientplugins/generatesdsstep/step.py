@@ -1,6 +1,7 @@
 """
 MAP Client Plugin Step
 """
+import copy
 import logging
 import os
 import json
@@ -91,10 +92,8 @@ class GenerateSDSStep(WorkflowStepMountPoint):
             QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
             if self._portData0:
                 output_dir = self._portData0.get('inputs')[0]['value']
-                print("populate protocol data", self._portData0.get('name'), self._portData0.get('value'))
-                print(output_dir)
                 if self._portData0['name'] == 'SimpleScaffold':
-                    run_protocol(self._main_window.model(), self._portData0['value'], output_dir)
+                    run_protocol(self._main_window.model(), copy.deepcopy(self._portData0['inputs']), output_dir)
                 else:
                     print('run protocol', self._portData0['name'])
 
@@ -126,8 +125,6 @@ class GenerateSDSStep(WorkflowStepMountPoint):
         QtWidgets.QMessageBox.critical(self._main_window, 'SDS Protocol failed', f"Could not apply protocol: {self._portData1['name']}.")
 
     def setPortData(self, index, dataIn):
-        print(':')
-        print(dataIn)
         self._portData0 = dataIn  # http://physiomeproject.org/workflow/1.0/rdf-schema#sds_protocol
 
     def getPortData(self, index):
